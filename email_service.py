@@ -1,46 +1,45 @@
 import os
 import base64
-import pickle
+import json
 from email.mime.text import MIMEText
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
+import streamlit as st
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-
 
 def gmail_authenticate():
     creds = None
 
-    # Load saved token
-    if os.path.exists("token.pickle"):
+    # 1. Try to load token from Streamlit Secrets first (Best for Cloud)
+    if "GCP_TOKEN" in st.secrets:
+        token_info = json.loads(st.secrets["GCP_TOKEN"])
+        creds = Credentials.from_authorized_user_info(token_info, SCOPES)
+    
+    # 2. Fallback to local pickle file for local development
+    elif os.path.exists("token.pickle"):
+        import pickle
         with open("token.pickle", "rb") as token:
             creds = pickle.load(token)
 
-    # If no valid credentials
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+    # 3. If credentials are expired, refresh them automatically
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    
+    # 4. If absolutely no credentials exist
+    if not creds:
+        # If running locally, you can fallback to the client secret file flow
+        if os.path.exists("credentials.json"):
+            from google_auth_oauthlib.flow import InstalledAppFlow
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
+            creds = flow.run_local_server(port=0)
         else:
-            # 🔴 FIX: ensures file is found in project root
-            if not os.path.exists("credentials.json"):
-                raise FileNotFoundError(
-                    "credentials.json not found. Please download it from Google Cloud Console and place it in the project folder."
-                )
-
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json",
-                SCOPES
+            raise FileNotFoundError(
+                "No valid authentication found. Please configure Streamlit Secrets or provide credentials.json locally."
             )
 
-            creds = flow.run_local_server(port=0)
-
-        # Save token for next run
-        with open("token.pickle", "wb") as token:
-            pickle.dump(creds, token)
-
     return build("gmail", "v1", credentials=creds)
-
 
 def send_email(to, subject, body):
     service = gmail_authenticate()
@@ -52,7 +51,6 @@ def send_email(to, subject, body):
 
     # Encode email
     raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-
     send_message = {"raw": raw_message}
 
     # Send email
