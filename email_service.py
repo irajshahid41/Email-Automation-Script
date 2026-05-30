@@ -22,8 +22,7 @@ def gmail_authenticate():
     flow = Flow.from_client_config(config, SCOPES)
     flow.redirect_uri = "http://localhost:8501"
 
-    creds = flow.run_local_server(port=0)
-
+    creds = flow.run_console()
     return build("gmail", "v1", credentials=creds)
 
 
