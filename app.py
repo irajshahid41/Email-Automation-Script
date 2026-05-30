@@ -7,6 +7,7 @@ from email_service import send_email
 
 # ---------------- CONFIG ----------------
 st.set_page_config(page_title="Email Automation UI", layout="wide")
+st.write(st.secrets)
 
 # ---------------- SESSION STATE ----------------
 if "logs" not in st.session_state:
