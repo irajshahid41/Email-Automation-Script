@@ -1,16 +1,15 @@
 import base64
 from email.mime.text import MIMEText
-
 import streamlit as st
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import Flow
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+
+SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 
 def gmail_authenticate():
 
-    # Build config from Streamlit Secrets (NO FILES needed)
     config = {
         "web": {
             "client_id": st.secrets["gmail"]["client_id"],
@@ -23,20 +22,18 @@ def gmail_authenticate():
     flow = Flow.from_client_config(config, SCOPES)
     flow.redirect_uri = "http://localhost:8501"
 
-    # This opens browser login
     creds = flow.run_local_server(port=0)
 
     return build("gmail", "v1", credentials=creds)
 
 
 def send_email(to, subject, body):
-
     service = gmail_authenticate()
 
     message = MIMEText(body)
     message["to"] = to
-    message["from"] = "me"
     message["subject"] = subject
+    message["from"] = "me"
 
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
@@ -45,4 +42,4 @@ def send_email(to, subject, body):
         body={"raw": raw}
     ).execute()
 
-    return "✅ Email sent successfully"
+    return "Email sent successfully"
