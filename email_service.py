@@ -1,28 +1,35 @@
+import os
 import base64
 from email.mime.text import MIMEText
-import streamlit as st
-
-from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import pickle
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
 
 def gmail_authenticate():
+    creds = None
 
-    config = {
-        "web": {
-            "client_id": st.secrets["gmail"]["client_id"],
-            "client_secret": st.secrets["gmail"]["client_secret"],
-            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-            "token_uri": "https://oauth2.googleapis.com/token"
-        }
-    }
+    # token exists
+    if os.path.exists("token.pickle"):
+        with open("token.pickle", "rb") as token:
+            creds = pickle.load(token)
 
-    flow = Flow.from_client_config(config, SCOPES)
-    flow.redirect_uri = "http://localhost:8501"
+    # login required
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                "credentials.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
 
-    creds = flow.run_console()
+        with open("token.pickle", "wb") as token:
+            pickle.dump(creds, token)
+
     return build("gmail", "v1", credentials=creds)
 
 
@@ -32,13 +39,14 @@ def send_email(to, subject, body):
     message = MIMEText(body)
     message["to"] = to
     message["subject"] = subject
-    message["from"] = "me"
 
-    raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
+    raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
-    service.users().messages().send(
+    send_message = {"raw": raw_message}
+
+    result = service.users().messages().send(
         userId="me",
-        body={"raw": raw}
+        body=send_message
     ).execute()
 
-    return "Email sent successfully"
+    return result
