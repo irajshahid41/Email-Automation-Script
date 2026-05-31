@@ -253,7 +253,7 @@ st.markdown("""
 
 # 3. Sidebar Navigation Structure
 with st.sidebar:
-   st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
+  st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
     
     scheduled_count = len(st.session_state.scheduled_emails)
     history_count = len(st.session_state.email_history)
