@@ -16,32 +16,21 @@ st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 # 2. Executive Slate Blue & Minimalist Chalk Stylesheet Injection
 st.markdown("""
     <style>
-    /* PREVENT SCREEN OVERFLOW & REMOVE SCROLLBARS */
+    /* PREVENT SCREEN OVERFLOW & MATCH DESIGN CANVAS */
     html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #F8FAFC !important;
         color: #0F172A !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        overflow: hidden !important;
-        height: 100vh;
     }
     .block-container {
-        padding: 1.5rem min(3vw, 2.5rem) !important;
+        padding: 1.5rem min(4vw, 3rem) !important;
         max-width: 1400px;
-        height: 100vh;
-        overflow-y: auto;
     }
     
     /* --- EXECUTIVE CHARCOAL SIDEBAR --- */
     [data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #E2E8F0 !important;
-    }
-    [data-testid="stSidebarUserContent"] {
-        padding-top: 1rem !important;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
     }
     
     /* BRAND HEADINGS STYLE */
@@ -50,7 +39,7 @@ st.markdown("""
         font-weight: 700;
         color: #FFFFFF;
         letter-spacing: 0.5px;
-        margin-bottom: 1.5rem;
+        padding: 1rem 0;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -69,20 +58,22 @@ st.markdown("""
     }
     
     /* MINIMALIST CONTEMPORARY LABEL STYLING */
-    label {
+    label, .custom-input-label {
         color: #475569 !important;
         font-weight: 600 !important;
         text-transform: uppercase;
         font-size: 11px !important;
         letter-spacing: 0.5px;
         margin-bottom: 4px !important;
+        display: block;
     }
 
-    /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
+    /* PRISTINE CRISP WHITE FORM FIELD CONTROLS (TEXT, BOXES, DROPDOWNS, CALENDARS) */
     .stTextInput input, .stTextArea textarea, 
     div[data-testid="stSelectbox"] > div, 
     div[data-testid="stDateInput"] input,
-    div[data-testid="stTimeInput"] input {
+    div[data-testid="stTimeInput"] input,
+    div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
@@ -92,7 +83,7 @@ st.markdown("""
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Explicit sizing layout patches */
+    /* Uniform sizing height variables */
     .stTextInput input, div[data-testid="stDateInput"] input, div[data-testid="stTimeInput"] input {
         height: 40px !important;
         padding: 8px 12px !important;
@@ -102,21 +93,22 @@ st.markdown("""
         padding: 10px 12px !important;
     }
 
-    /* Force Selectbox styling to perfectly match text input boxes */
-    div[data-testid="stSelectbox"] [data-baseweb="select"] {
+    /* Force Selectbox & Popovers to look identical to white fields */
+    div[data-testid="stSelectbox"] [data-baseweb="select"], 
+    div[data-baseweb="popover"] {
         height: 40px !important;
         background-color: #FFFFFF !important;
-        border-radius: 6px !important;
+        border: none !important;
     }
     
     div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child {
         background-color: transparent !important;
-        padding-top: 2px !important;
-        padding-bottom: 2px !important;
-        padding-left: 8px !important;
+        padding-top: 4px !important;
+        padding-left: 4px !important;
+        color: #0F172A !important;
     }
     
-    /* Focus active rings */
+    /* Input element active styling */
     .stTextInput input:focus, .stTextArea textarea:focus, 
     div[data-testid="stSelectbox"] > div:focus-within,
     div[data-testid="stDateInput"] input:focus, div[data-testid="stTimeInput"] input:focus {
@@ -136,7 +128,7 @@ st.markdown("""
         background-color: transparent !important;
         border: none !important;
         border-radius: 6px !important;
-        padding: 8px 12px !important;
+        padding: 10px 14px !important;
         color: #94A3B8 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
@@ -193,7 +185,7 @@ st.markdown("""
         background-color: #F9FAFB !important;
     }
     
-    /* REFINED SYSTEM CONNECTIVITY CONDENSED FOOTER */
+    /* SYSTEM CONNECTIVITY CONDENSED FOOTER */
     .status-badge {
         background-color: #0F172A;
         color: #34D399;
@@ -201,11 +193,8 @@ st.markdown("""
         border-radius: 6px;
         font-size: 12px;
         border: 1px solid #334155;
-        margin-top: auto;
-        margin-bottom: 1.5rem;
     }
     
-    /* Clean up division margins */
     hr {
         margin: 1rem 0 !important;
     }
@@ -230,7 +219,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
     
-    # Modern system connection alignment anchor
+    st.markdown("<br>" * 10, unsafe_allow_html=True)
     st.markdown('<div class="status-badge"><span style="color:#10B981;">●</span> Gmail ready<br><span style="color:#94A3B8; font-size:11px;">Configured & Active</span></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
@@ -246,16 +235,14 @@ if "Compose" in menu:
         from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
         
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
-    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150)
+    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=140)
 
     col3, col4 = st.columns(2)
     with col3:
-        st.markdown("<label>Schedule Date & Time</label>", unsafe_allow_html=True)
-        date_col, time_col = st.columns(2)
-        with date_col:
-            scheduled_date = st.date_input("Date", value=date(2026, 5, 31), label_visibility="collapsed")
-        with time_col:
-            scheduled_time = st.time_input("Time", value=dt_time(12, 1), label_visibility="collapsed")
+        st.markdown('<span class="custom-input-label">Schedule Date & Time</span>', unsafe_allow_html=True)
+        # Using a single row with sequential items to prevent column rendering conflicts
+        scheduled_date = st.date_input("Select Date", value=date(2026, 5, 31), label_visibility="collapsed")
+        scheduled_time = st.time_input("Select Time", value=dt_time(12, 1), label_visibility="collapsed")
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
         
@@ -270,7 +257,7 @@ if "Compose" in menu:
     with ctrl_col3:
         send_clicked = st.button("Send Email", key="send_btn", use_container_width=True)
 
-    # Feedback Processing Framework
+    # Feedback Cards Processing Block
     if send_clicked:
         if to_field and subject_field and body_field:
             formatted_timestamp = f"{scheduled_date.strftime('%Y-%m-%d')} {scheduled_time.strftime('%I:%M %p')}"
@@ -303,7 +290,7 @@ if "Compose" in menu:
                 except Exception as e:
                     status_box.markdown(f"""
                         <div style="background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 10px; border-radius: 6px; margin-top: 10px;">
-                            <b style="color: #991B1B; font-size: 14px;">❌ Connection Timeout:</b> <span style="color: #4B5563; font-size: 13px;">{str(e)}</span>
+                            <b style="color: #991B1B; font-size: 14px;">❌ Connection Error:</b> <span style="color: #4B5563; font-size: 13px;">{str(e)}</span>
                         </div>
                     """, unsafe_allow_html=True)
         else:
