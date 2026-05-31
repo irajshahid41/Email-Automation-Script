@@ -58,7 +58,7 @@ st.markdown("""
         display: block !important;
     }
     
-    /* FIELD LABELS */
+    /* FIELD LABELS WITH THEMED ACCENT COLOR FOR THE ICON */
     label, .custom-input-label {
         color: #475569 !important;
         font-weight: 600 !important;
@@ -67,6 +67,12 @@ st.markdown("""
         letter-spacing: 0.5px;
         margin-bottom: 6px !important;
         display: block;
+    }
+    
+    label span.icon-accent {
+        color: #E05621 !important;
+        float: right;
+        font-size: 14px;
     }
 
     /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
@@ -88,15 +94,6 @@ st.markdown("""
     }
     .stTextArea textarea {
         padding: 10px 12px !important;
-    }
-
-    /* Target the text input element container by looking for our explicit label name match */
-    div[data-testid="element-container"]:has(label:contains("SCHEDULE DATE & TIME")) input,
-    div[data-testid="element-container"]:has(input[aria-label="SCHEDULE DATE & TIME"]) input {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23E05621' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important;
-        background-position: calc(100% - 14px) center !important;
-        padding-right: 40px !important;
     }
 
     /* Selectbox Custom Adjustments */
@@ -247,8 +244,8 @@ if "Compose" in menu:
 
     col3, col4 = st.columns(2)
     with col3:
-        # Crisp input text node
-        datetime_value = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM", key="compose_date_field")
+        # Embedding an elegant markdown-supported icon directly in the label layout safely!
+        datetime_value = st.text_input("SCHEDULE DATE & TIME 📅", value="2026-05-31 12:01 PM", key="compose_date_field")
         
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
