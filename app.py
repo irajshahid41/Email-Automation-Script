@@ -244,8 +244,13 @@ if "Compose" in menu:
 
     col3, col4 = st.columns(2)
     with col3:
-        # Embedding an elegant markdown-supported icon directly in the label layout safely!
-        datetime_value = st.text_input("SCHEDULE DATE & TIME 📅", value="2026-05-31 12:01 PM", key="compose_date_field")
+        # Using native date_input gives you the pristine rounded box, 
+        # the right-aligned calendar icon, and the picker popup!
+        datetime_value = st.date_input(
+            "SCHEDULE DATE & TIME", 
+            value=datetime(2026, 5, 31),
+            key="compose_date_field"
+        )
         
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
