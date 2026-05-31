@@ -27,22 +27,79 @@ st.markdown("""
         max-width: 1400px;
     }
     
-    /* SIDEBAR LAYER STRUCTURAL COLOR */
+    /* --- NEW PROFESSIONAL SIDEBAR ARCHITECTURE --- */
     [data-testid="stSidebar"] {
-        background-color: #1A1D29 !important;
-        border-right: 1px solid #24293E !important;
+        background: linear-gradient(180deg, #151821 0%, #0E1017 100%) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
     }
     
+    /* Elegant Clean Navigation Menu Wrappers */
+    [data-testid="stSidebarNav"] {
+        background-color: transparent !important;
+    }
+    
+    /* Style the radio menu options as premium individual interactive tiles */
+    div[data-testid="stRadio"] > div {
+        background-color: transparent !important;
+        gap: 10px !important;
+    }
+    
+    div[data-testid="stRadio"] label {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        color: #94A3B8 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+        text-transform: none !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    /* Hide the ugly standard radio circle completely */
+    div[data-testid="stRadio"] label div[data-testid="stMarkdownContainer"]::before {
+        display: none !important;
+    }
+    div[data-testid="stRadio"] input[type="radio"] {
+        display: none !important;
+    }
+    div[data-testid="stRadio"] div[data-checked="true"] label {
+        background-color: rgba(0, 242, 254, 0.06) !important;
+        border-color: rgba(0, 242, 254, 0.4) !important;
+        color: #00F2FE !important;
+        border-left: 4px solid #00F2FE !important;
+        box-shadow: 0 4px 12px rgba(0, 242, 254, 0.05) !important;
+    }
+    
+    div[data-testid="stRadio"] label:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.15) !important;
+        color: #FFFFFF !important;
+    }
+
     /* BRAND HEADINGS STYLE */
     .sidebar-logo {
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 800;
-        color: #00F2FE;
-        font-family: 'Courier New', Courier, monospace;
-        letter-spacing: 3px;
-        padding: 1rem 0;
-        text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        color: #FFFFFF;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        letter-spacing: 1.5px;
+        padding: 1.5rem 0 2rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
+    .sidebar-logo span {
+        color: #00F2FE;
+    }
+    
     .main-title {
         font-family: 'Impact', sans-serif !important;
         font-weight: 900 !important;
@@ -62,7 +119,7 @@ st.markdown("""
         margin-bottom: 8px !important;
     }
 
-    /* CYBERPUNK FORM COMPONENT DECORATION - MATRICED TO FORCED HEIGHTS */
+    /* CYBERPUNK FORM COMPONENT DECORATION */
     .stTextInput input, .stTextArea textarea, div[data-testid="stSelectbox"] > div {
         background-color: #1E2235 !important;
         border: 1px solid #2D3450 !important;
@@ -135,23 +192,23 @@ st.markdown("""
     
     /* CYBER INFRASTRUCTURE CONFIG BADGE */
     .status-badge {
-        background-color: #111827;
+        background-color: rgba(15, 23, 42, 0.6);
         color: #34D399;
         padding: 14px;
         border-radius: 8px;
         font-size: 12px;
         font-family: monospace;
-        border: 1px solid #1F2937;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
     </style>
 """, unsafe_allow_html=True)
 
 # 3. Sidebar Panel Navigation Matrix
 with st.sidebar:
-    st.markdown('<div class="sidebar-logo">✉️ MAILFLOW</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
     menu = st.radio("Nav", ["📝 Compose", "📅 Scheduled", "⏳ History"], label_visibility="collapsed")
-    st.markdown("<br>" * 14, unsafe_allow_html=True)
-    st.markdown('<div class="status-badge"><span style="color:#34D399;">●</span> System Online<br><b style="color:white;">Gmail Configured</b></div>', unsafe_allow_html=True)
+    st.markdown("<br>" * 10, unsafe_allow_html=True)
+    st.markdown('<div class="status-badge"><span style="color:#34D399;">●</span> SYSTEM ONLINE<br><b style="color:white; font-family:sans-serif; font-size:11px;">Relay Connected</b></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
 if "Compose" in menu:
