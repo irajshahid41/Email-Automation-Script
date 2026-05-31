@@ -374,4 +374,4 @@ elif "History" in menu:
     if not st.session_state.email_history:
         st.info("No sent logs tracked yet.")
     else:
-        st.write(st.session_state.email_history) this is my complete app.py I want the schedule section like this make it for me
+        st.write(st.session_state.email_history) 
