@@ -109,6 +109,18 @@ st.markdown("""
         width: 100%;
         color: #0F172A;
     }
+
+    div[data-testid="stDateInput"] input, 
+div[data-testid="stDateInput"] div[data-baseweb="input"] {
+    background-color: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 6px !important;
+    color: #0F172A !important;
+}
+
+/* Ensure the calendar icon color matches your theme */
+div[data-testid="stDateInput"] svg {
+    color: #E05621 !important;
     
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput > div::after {
         content: '📅';
