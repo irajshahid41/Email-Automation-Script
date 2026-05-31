@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import datetime, date, time
+from datetime import datetime
 # Import your secured engine logic
 from email_service import send_email
 
@@ -11,7 +11,7 @@ if "email_history" not in st.session_state:
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Executive Theme & Native CSS Overlay Overrides
+# 2. Executive Theme & Custom Layout Engine Injection
 st.markdown("""
     <style>
     /* PREVENT SCREEN OVERFLOW & MATCH DESIGN CANVAS */
@@ -72,9 +72,7 @@ st.markdown("""
     /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
     .stTextInput input, .stTextArea textarea, 
     div[data-testid="stSelectbox"] > div,
-    div[data-baseweb="select"],
-    div[data-testid="stDateInput"] input,
-    div[data-testid="stTimeInput"] input {
+    div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
@@ -84,7 +82,7 @@ st.markdown("""
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     }
 
-    .stTextInput input, div[data-testid="stDateInput"] input, div[data-testid="stTimeInput"] input {
+    .stTextInput input {
         height: 42px !important;
         padding: 8px 12px !important;
     }
@@ -107,22 +105,30 @@ st.markdown("""
     }
     
     /* MATCHING ORANGE DESIGN SYSTEM THEME ICON ACCENTS */
-    div[data-testid="stSelectbox"] svg,
-    div[data-testid="stDateInput"] stroke,
-    div[data-testid="stDateInput"] svg,
-    div[data-testid="stTimeInput"] svg {
+    div[data-testid="stSelectbox"] svg {
         color: #E05621 !important;
-        fill: transparent !important;
     }
     
     /* Active Focus Styles */
     .stTextInput input:focus, .stTextArea textarea:focus, 
-    div[data-testid="stSelectbox"] > div:focus-within,
-    div[data-testid="stDateInput"] input:focus,
-    div[data-testid="stTimeInput"] input:focus {
+    div[data-testid="stSelectbox"] > div:focus-within {
         border-color: #1A56DB !important;
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
         outline: none !important;
+    }
+
+    /* --- NATIVE EMBEDDED INTEGRATED ICON CONTAINER WRAPPER --- */
+    .calendar-field-wrapper {
+        position: relative;
+        width: 100%;
+    }
+    .calendar-inline-icon {
+        position: absolute;
+        right: 14px;
+        top: 41px; /* Positions perfectly centered inside the text field background block */
+        color: #E05621 !important;
+        pointer-events: none;
+        z-index: 99;
     }
 
     /* --- SIDEBAR RADIO BUTTON NAVIGATION OVERRIDES --- */
@@ -237,28 +243,28 @@ if "Compose" in menu:
 
     col1, col2 = st.columns(2)
     with col1:
-        to_field = st.text_input("TO", placeholder="recipient@example.com")
+        # Binding keys stops Streamlit from wiping inputs during an active session state rerun!
+        to_field = st.text_input("TO", placeholder="recipient@example.com", key="compose_to_field")
     with col2:
-        from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
+        from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com", key="compose_from_field")
         
-    subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
-    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150)
+    subject_field = st.text_input("SUBJECT", placeholder="Email subject line", key="compose_subject_field")
+    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150, key="compose_body_field")
 
     col3, col4 = st.columns(2)
     with col3:
-        st.markdown('<span class="custom-input-label">Schedule Date & Time</span>', unsafe_allow_html=True)
-        # Split inputs into native side-by-side blocks to track date and time securely without resetting text!
-        time_col1, time_col2 = st.columns(2)
-        with time_col1:
-            date_val = st.date_input("Date Selection", value=date(2026, 5, 31), label_visibility="collapsed")
-        with time_col2:
-            time_val = st.time_input("Time Selection", value=time(12, 1), label_visibility="collapsed")
-            
-        # Combine parameters into single timestamp payload string
-        datetime_value = f"{date_val} {time_val.strftime('%I:%M %p')}"
+        # Seamless overlay containing the single crisp text widget and the calendar icon overlay matching the mockup layout design
+        st.markdown('<div class="calendar-field-wrapper">', unsafe_allow_html=True)
+        datetime_value = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM", key="compose_date_field")
+        st.markdown("""
+            <div class="calendar-inline-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6'></line><line x1="8" y1="2" x2="8" y2="6'></line><line x1="3" y1="10" x2="21" y2="10'></line></svg>
+            </div>
+            </div>
+        """, unsafe_allow_html=True)
         
     with col4:
-        send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
+        send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
         
     st.write("")
 
