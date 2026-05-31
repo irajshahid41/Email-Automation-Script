@@ -92,6 +92,27 @@ st.markdown("""
         height: 42px !important;
         padding: 8px 12px !important;
     }
+
+    div[data-testid="element-container"]:has(input[key="compose_date_field"]) {
+        position: relative;
+    }
+    
+    div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput input {
+        padding-right: 45px !important;
+    }
+    
+    div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput > div::after {
+        content: '📅';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        z-index: 10;
+        pointer-events: none;
+        display: block !important;
+        visibility: visible !important;
+    }
     
     /* TARGET SPECIFIC CALENDAR PICKER FIELD USING ITS KEY FOR INLINE ICON POSITIONING */
     div[data-testid="element-container"]:has(div[data-testid="stTextInputRootElement"] button[key="compose_date_field"]) .stTextInput > div,
