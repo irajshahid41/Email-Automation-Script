@@ -5,9 +5,9 @@ from email_service import send_email
 
 # 1. Initialize Persistent Application State Trackers
 if "scheduled_emails" not in st.session_state:
-    st.session_state.scheduled_emails = []
+    st.session_state.scheduled_emails = []
 if "email_history" not in st.session_state:
-    st.session_state.email_history = []
+    st.session_state.email_history = []
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
@@ -253,7 +253,7 @@ st.markdown("""
 
 # 3. Sidebar Navigation Structure
 with st.sidebar:
-  st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
     
     scheduled_count = len(st.session_state.scheduled_emails)
     history_count = len(st.session_state.email_history)
@@ -287,19 +287,23 @@ if "Compose" in menu:
     body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150, key="compose_body_field")
 
     # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
-    # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
-    col3, col4 = st.columns(2)
-    with col3:
-        # Using Streamlit's native date and time widgets
-        # These will automatically handle the date/time selection state
-        date_val = st.date_input("SCHEDULE DATE", value=datetime.now().date(), key="compose_date")
-        time_val = st.time_input("SCHEDULE TIME", value=datetime.now().time(), key="compose_time")
-        
-        # Combine them into a datetime object for your payload
-        datetime_value = datetime.combine(date_val, time_val)
-            
-    with col4:
-        send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
+    col3, col4 = st.columns(2)
+    with col3:
+        st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
+        
+        # This custom HTML wrapper uses CSS Grid to keep the input and icon on one line
+        st.markdown("""
+        <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;">
+            <div id="date-input-wrapper">
+                <input type="text" value="2026-05-31 12:01 PM" disabled 
+                style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 6px; background: white;">
+            </div>
+            <div style="font-size: 20px;">📅</div>
+        </div>
+        """, unsafe_allow_html=True)
+            
+    with col4:
+        send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
         
     st.write("")
 
@@ -370,4 +374,4 @@ elif "History" in menu:
     if not st.session_state.email_history:
         st.info("No sent logs tracked yet.")
     else:
-        st.write(st.session_state.email_history) 
+        st.write(st.session_state.email_history) this is my complete app.py I want the schedule section like this make it for me
