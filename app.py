@@ -180,6 +180,7 @@ if "Compose" in menu:
 # --- PANEL BLOCK: SCHEDULED ---
 elif "Scheduled" in menu:
     st.markdown('<div class="main-title">SCHEDULED EMAILS</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #5C5A55; font-size: 14px; margin-bottom: 15px;">Emails currently queued up for future automated delivery</div>', unsafe_allow_html=True)
     st.write("---")
     if not st.session_state.scheduled_emails:
         st.info("No scheduled emails in your dispatch queue.")
@@ -189,6 +190,7 @@ elif "Scheduled" in menu:
 # --- PANEL BLOCK: HISTORY ---
 elif "History" in menu:
     st.markdown('<div class="main-title">TRANSMISSION HISTORY</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #5C5A55; font-size: 14px; margin-bottom: 15px;">Log of all successfully dispatched automated emails</div>', unsafe_allow_html=True)
     st.write("---")
     if not st.session_state.email_history:
         st.info("No sent logs tracked yet.")
