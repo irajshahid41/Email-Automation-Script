@@ -139,43 +139,76 @@ if "Compose" in menu:
     st.write("")
     
     # Interaction Control Footers
+    st.write("")
+    
+    # 1. Interaction Control Footers Row
     ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([6, 1, 1.2])
     with ctrl_col2:
         if st.button("Clear", key="clear_btn", use_container_width=True):
             st.rerun()
             
     with ctrl_col3:
-        if st.button("Send Email", key="send_btn", use_container_width=True):
-            if to_field and subject_field and body_field:
-                email_payload = {
-                    "to": to_field,
-                    "from": from_field,
-                    "subject": subject_field,
-                    "body": body_field,
-                    "timestamp": time_input_string
-                }
-                
-                if send_mode == "Schedule for later":
-                    st.session_state.scheduled_emails.append(email_payload)
-                    st.success("📅 Outbound email successfully saved to your scheduled queue!")
-                else:
-                    # 🚀 INTERACTIVE LIVE PROGRESS UPDATER BLOCK
-                    with st.status("⏳ Sending email...", expanded=True) as status:
-                        try:
-                            # Deliver via our authenticated Gmail API script connection
-                            send_email(to_field, subject_field, body_field)
-                            
-                            # Log record to Session State history
-                            st.session_state.email_history.append(email_payload)
-                            
-                            # Update statuses cleanly when successfully delivered
-                            status.update(label="✅ Email sent successfully!", state="complete", expanded=False)
-                            st.toast("Email Dispatched!", icon="🚀")
-                        except Exception as e:
-                            status.update(label="❌ Delivery Failed", state="error", expanded=True)
-                            st.error(f"Handshake Refused: {str(e)}")
+        send_clicked = st.button("Send Email", key="send_btn", use_container_width=True)
+
+    # 2. Dedicated Status Row (Appears perfectly below the buttons)
+    if send_clicked:
+        if to_field and subject_field and body_field:
+            email_payload = {
+                "to": to_field,
+                "from": from_field,
+                "subject": subject_field,
+                "body": body_field,
+                "timestamp": time_input_string
+            }
+            
+            if send_mode == "Schedule for later":
+                st.session_state.scheduled_emails.append(email_payload)
+                st.markdown("""
+                    <div style="background-color: #EBF5FB; border-left: 5px solid #2980B9; padding: 15px; border-radius: 4px; margin-top: 20px;">
+                        <b style="color: #1B4F72; font-size: 15px;">📅 Scheduled Successfully</b><br>
+                        <span style="color: #2C3E50; font-size: 13px;">Outbound email successfully saved to your scheduled queue!</span>
+                    </div>
+                """, unsafe_allow_html=True)
             else:
-                st.error("⚠️ Validation Error: Please fill out TO, SUBJECT, and MESSAGE blocks.")
+                # Placeholder for the active state
+                status_box = st.empty()
+                status_box.markdown("""
+                    <div style="background-color: #FEF9E7; border-left: 5px solid #F39C12; padding: 15px; border-radius: 4px; margin-top: 20px;">
+                        <b style="color: #7D6608; font-size: 15px;">⏳ Sending email...</b><br>
+                        <span style="color: #515A5A; font-size: 13px;">Accessing Google API cloud relays. Please wait...</span>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                try:
+                    # Deliver via our authenticated Gmail API script connection
+                    send_email(to_field, subject_field, body_field)
+                    
+                    # Log record to Session State history
+                    st.session_state.email_history.append(email_payload)
+                    
+                    # Overwrite placeholder with a highly visible custom Success Highlight Row
+                    status_box.markdown("""
+                        <div style="background-color: #E8F8F5; border-left: 5px solid #27AE60; padding: 15px; border-radius: 4px; margin-top: 20px;">
+                            <b style="color: #117A65; font-size: 15px;">✅ Email sent successfully!</b><br>
+                            <span style="color: #196F3D; font-size: 13px;">Dispatch confirmed. Message has left your Gmail account successfully.</span>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    st.toast("Email Dispatched!", icon="🚀")
+                    
+                except Exception as e:
+                    status_box.markdown(f"""
+                        <div style="background-color: #FADBD8; border-left: 5px solid #CB4335; padding: 15px; border-radius: 4px; margin-top: 20px;">
+                            <b style="color: #78281F; font-size: 15px;">❌ Delivery Failed</b><br>
+                            <span style="color: #922B21; font-size: 13px;">Handshake Refused: {str(e)}</span>
+                        </div>
+                    """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+                <div style="background-color: #FADBD8; border-left: 5px solid #CB4335; padding: 15px; border-radius: 4px; margin-top: 20px;">
+                    <b style="color: #78281F; font-size: 15px;">⚠️ Validation Error</b><br>
+                    <span style="color: #922B21; font-size: 13px;">Please make sure the TO, SUBJECT, and MESSAGE blocks are filled out.</span>
+                </div>
+            """, unsafe_allow_html=True)
 
 # --- PANEL BLOCK: SCHEDULED ---
 elif "Scheduled" in menu:
