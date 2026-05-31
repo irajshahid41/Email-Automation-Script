@@ -290,17 +290,13 @@ if "Compose" in menu:
     col3, col4 = st.columns(2)
     with col3:
         st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
-        
-        # This custom HTML wrapper uses CSS Grid to keep the input and icon on one line
-        st.markdown("""
-        <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;">
-            <div id="date-input-wrapper">
-                <input type="text" value="2026-05-31 12:01 PM" disabled 
-                style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 6px; background: white;">
-            </div>
-            <div style="font-size: 20px;">📅</div>
-        </div>
-        """, unsafe_allow_html=True)
+        # Using the native component for stability and design matching
+        datetime_value = st.datetime_input(
+            "Schedule Date and Time",
+            value=datetime.now(),
+            label_visibility="collapsed",
+            key="compose_date_time"
+        )
             
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
