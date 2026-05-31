@@ -268,6 +268,25 @@ div[data-testid="stDateInput"] svg {
     </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+    /* Style for both the Date Input and the Selectbox to ensure they match perfectly */
+    div[data-testid="stDateInput"] > div[data-baseweb="input"],
+    div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+        height: 42px !important; /* Matches your defined height */
+    }
+
+    /* Ensure the text color is consistent */
+    div[data-testid="stDateInput"] input,
+    div[data-testid="stSelectbox"] div {
+        color: #0F172A !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # 3. Sidebar Navigation Structure
 with st.sidebar:
     st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
@@ -306,51 +325,40 @@ if "Compose" in menu:
     # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
     col3, col4 = st.columns(2)
     with col3:
-        # --- SCHEDULE DATE & TIME SECTION ---
-        st.markdown("""
+    st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
+    st.markdown("""
     <style>
-    /* 1. Global Background */
-    html, body, [data-testid="stAppViewContainer"] {
-        background-color: #F8FAFC !important;
-    }
-
-    /* 2. Text Input and Date Input styling (White box, Grey border) */
-    .stTextInput input, .stTextArea textarea, 
-    div[data-baseweb="select"], 
-    div[data-testid="stDateInput"] > div[data-baseweb="input"] {
+    /* Style for both the Date Input and the Selectbox to ensure they match perfectly */
+    div[data-testid="stDateInput"] > div[data-baseweb="input"],
+    div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
+        height: 42px !important; /* Matches your defined height */
+    }
+
+    /* Ensure the text color is consistent */
+    div[data-testid="stDateInput"] input,
+    div[data-testid="stSelectbox"] div {
         color: #0F172A !important;
-    }
-
-    /* 3. Calendar Icon Color */
-    div[data-testid="stDateInput"] svg {
-        fill: #E05621 !important;
-    }
-
-    /* 4. Labels */
-    .custom-input-label { 
-        color: #475569 !important; 
-        font-weight: 600 !important; 
-        text-transform: uppercase; 
-        font-size: 11px !important; 
-        margin-bottom: 6px !important; 
-        display: block; 
     }
     </style>
 """, unsafe_allow_html=True)
+    datetime_value = st.datetime_input(
+        "Date Time", 
+        value=datetime.now(), 
+        label_visibility="collapsed",
+        key="compose_date_time"
+    )
 
-        # This single native widget renders the input field and the picker 
-        datetime_value = st.datetime_input(
-            "Schedule Date and Time",
-             value=datetime.now(),
-             label_visibility="collapsed",
-             key="compose_date_time"
- )
-            
-    with col4:
-        send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
+with col4:
+    st.markdown('<label class="custom-input-label">SEND MODE</label>', unsafe_allow_html=True)
+    send_mode = st.selectbox(
+        "Mode", 
+        ["Send Immediately", "Schedule for later"], 
+        label_visibility="collapsed",
+        key="compose_send_mode"
+    )
         
     st.write("")
 
