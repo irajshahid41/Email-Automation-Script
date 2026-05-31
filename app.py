@@ -289,14 +289,16 @@ if "Compose" in menu:
     # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
     col3, col4 = st.columns(2)
     with col3:
+        # --- SCHEDULE DATE & TIME SECTION ---
         st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
-        # Using the native component for stability and design matching
+
+        # This single native widget renders the input field and the picker 
         datetime_value = st.datetime_input(
             "Schedule Date and Time",
-            value=datetime.now(),
-            label_visibility="collapsed",
-            key="compose_date_time"
-        )
+             value=datetime.now(),
+             label_visibility="collapsed",
+             key="compose_date_time"
+ )
             
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
