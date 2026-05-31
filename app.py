@@ -252,7 +252,7 @@ if "Compose" in menu:
         with time_col1:
             date_val = st.date_input("Date Selection", value=date(2026, 5, 31), label_visibility="collapsed")
         with time_col2:
-            time_val = st.st.time_input("Time Selection", value=time(12, 1), label_visibility="collapsed")
+            time_val = st.time_input("Time Selection", value=time(12, 1), label_visibility="collapsed")
             
         # Combine parameters into single timestamp payload string
         datetime_value = f"{date_val} {time_val.strftime('%I:%M %p')}"
