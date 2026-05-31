@@ -141,9 +141,9 @@ div[data-testid="stDateInput"] svg {
     
     .stTextArea textarea {
         padding: 10px 12px !important;
-        color: #000000 !important;
+        color: #6B7280 !important;
         background-color: #FFFFFF !important;
-        -webkit-text-fill-color: #000000 !important
+        -webkit-text-fill-color: #6B7280 !important
     }
 
     /* Selectbox Custom Adjustments */
