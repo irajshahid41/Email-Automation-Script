@@ -287,15 +287,24 @@ if "Compose" in menu:
     body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150, key="compose_body_field")
 
     # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
+    # --- FIXED STRUCTURED LAYOUT ---
     col3, col4 = st.columns(2)
     with col3:
-        # Replaced invalid parameter 'id' with 'key' to natively clear error and match style metrics
-        datetime_value = st.text_input(
-            "SCHEDULE DATE & TIME", 
-            value="2026-05-31 12:01 PM", 
-            key="compose_date_field"
-        )
-        
+        st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
+        # Create a tiny sub-column grid to hold the input and the icon
+        date_col, icon_col = st.columns([0.9, 0.1])
+        with date_col:
+            datetime_value = st.text_input(
+                "SCHEDULE DATE & TIME", 
+                value="2026-05-31 12:01 PM", 
+                key="compose_date_field",
+                label_visibility="collapsed"
+            )
+        with icon_col:
+            # Add vertical spacing to align icon with the input box
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("📅")
+            
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
         
