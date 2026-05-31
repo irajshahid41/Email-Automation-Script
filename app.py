@@ -13,60 +13,71 @@ if "email_history" not in st.session_state:
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Premium Overhaul Stylesheet Injection
+# 2. Premium Overhaul Stylesheet Injection (Nordic Tech & Slate Theme)
 st.markdown("""
     <style>
     html, body, [data-testid="stAppViewContainer"] {
-        background-color: #F4F0E6 !important;
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #F9F9F7 !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .block-container {
-        padding: 2.5rem min(5vw, 4rem) !important;
+        padding: 3rem min(5vw, 4rem) !important;
         max-width: 1400px;
     }
+    
+    /* SIDEBAR MATTE OBSIDIAN COLOR */
     [data-testid="stSidebar"] {
-        background-color: #1E1E1C !important;
+        background-color: #1A2222 !important;
     }
     
     /* BRAND HEADINGS STYLE */
     .sidebar-logo {
         font-size: 24px;
         font-weight: 800;
-        color: #E06A3B;
+        color: #C05621;
         font-family: 'Courier New', Courier, monospace;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
         padding: 1rem 0;
     }
     .main-title {
         font-family: 'Impact', sans-serif !important;
         font-weight: 900 !important;
-        color: #1E1E1C !important;
+        color: #2D3748 !important;
         font-size: 38px !important;
         margin-bottom: 5px !important;
+        letter-spacing: 0.5px;
     }
     
     /* INPUT LABELS STYLE */
     label {
-        color: #5C5A55 !important;
+        color: #718096 !important;
         font-weight: 700 !important;
         text-transform: uppercase;
         font-size: 11px !important;
-        letter-spacing: 1px;
-        margin-bottom: 6px !important;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px !important;
     }
 
-    /* INPUT FIELD DECORATION & PLACEHOLDER PATCH */
+    /* PREMIUM FIELDS WITH SUBTLE SHADOWS */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
-        border: 1px solid #D6D2C4 !important;
-        border-radius: 6px !important;
-        color: #1E1E1C !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 8px !important;
+        color: #1A202C !important;
         font-size: 14px !important;
+        padding: 10px !important;
+        transition: all 0.2s ease-in-out;
     }
     
-    /* Forces placeholder text to be clearly visible */
+    /* Crisp focus highlight */
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #C05621 !important;
+        box-shadow: 0 0 0 1px #C05621 !important;
+    }
+    
+    /* Clear placeholder visibility */
     .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #8C8A82 !important;
+        color: #A0AEC0 !important;
         opacity: 1 !important;
     }
 
@@ -75,32 +86,44 @@ st.markdown("""
         text-align: right;
     }
     
-    /* CORE ACTIONS INTERACTIVE OVERRIDES */
+    /* MATTE COPPER ORANGE BUTTON ACTION */
     div.stButton > button:first-child {
-        background-color: #D35400 !important;
+        background-color: #C05621 !important;
         color: white !important;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         border: none !important;
-        font-weight: bold !important;
-        padding: 0.6rem 2rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
+        padding: 0.6rem 2.2rem !important;
+        box-shadow: 0 2px 4px rgba(192, 86, 33, 0.15);
+        transition: all 0.2s ease;
     }
     div.stButton > button:first-child:hover {
-        background-color: #BA4A00 !important;
-    }
-    div.stButton > button[key*="clear_btn"] {
-        background-color: #FFFFFF !important;
-        color: #1E1E1C !important;
-        border: 1px solid #D6D2C4 !important;
+        background-color: #9C4216 !important;
+        box-shadow: 0 4px 8px rgba(192, 86, 33, 0.25);
     }
     
-    /* BOTTOM CARD STATUS BADGE */
+    /* Secondary Clear Button */
+    div.stButton > button[key*="clear_btn"] {
+        background-color: #FFFFFF !important;
+        color: #4A5568 !important;
+        border: 1px solid #E2E8F0 !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    div.stButton > button[key*="clear_btn"]:hover {
+        background-color: #F7FAFC !important;
+        color: #1A202C !important;
+    }
+    
+    /* COMPACT CONFIGURATION FOOTER CARD */
     .status-badge {
-        background-color: #162216;
-        color: #52BE80;
-        padding: 12px;
-        border-radius: 6px;
+        background-color: #232E2E;
+        color: #48BB78;
+        padding: 14px;
+        border-radius: 8px;
         font-size: 12px;
         font-family: monospace;
+        border: 1px solid #2B3A3A;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -110,13 +133,12 @@ with st.sidebar:
     st.markdown('<div class="sidebar-logo">✉️ MAILFLOW</div>', unsafe_allow_html=True)
     menu = st.radio("Nav", ["📝 Compose", "📅 Scheduled", "⏳ History"], label_visibility="collapsed")
     st.markdown("<br>" * 14, unsafe_allow_html=True)
-    st.markdown('<div class="status-badge"><span style="color:#2ECC71;">●</span> Gmail ready<br><b style="color:white;">Configured</b></div>', unsafe_allow_html=True)
+    st.markdown('<div class="status-badge"><span style="color:#48BB78;">●</span> Gmail ready<br><b style="color:white;">Configured</b></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
 if "Compose" in menu:
-    #  NEW VISIBLE LINES:
     st.markdown('<div class="main-title">NEW EMAIL</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color: #5C5A55; font-size: 14px; margin-bottom: 15px;">Compose and schedule your email distribution loop</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #718096; font-size: 14px; margin-bottom: 20px;">Compose and schedule your email distribution loop</div>', unsafe_allow_html=True)
     st.write("---")
     
     col1, col2 = st.columns(2)
@@ -133,12 +155,8 @@ if "Compose" in menu:
     with col3:
         time_input_string = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM")
     with col4:
-        # Added an empty string as a label to perfectly sync the alignment baseline with the text box
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
         
-    st.write("")
-    
-    # Interaction Control Footers
     st.write("")
     
     # 1. Interaction Control Footers Row
@@ -164,18 +182,18 @@ if "Compose" in menu:
             if send_mode == "Schedule for later":
                 st.session_state.scheduled_emails.append(email_payload)
                 st.markdown("""
-                    <div style="background-color: #EBF5FB; border-left: 5px solid #2980B9; padding: 15px; border-radius: 4px; margin-top: 20px;">
-                        <b style="color: #1B4F72; font-size: 15px;">📅 Scheduled Successfully</b><br>
-                        <span style="color: #2C3E50; font-size: 13px;">Outbound email successfully saved to your scheduled queue!</span>
+                    <div style="background-color: #EBF8FF; border-left: 5px solid #3182CE; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                        <b style="color: #2B6CB0; font-size: 15px;">📅 Scheduled Successfully</b><br>
+                        <span style="color: #4A5568; font-size: 13px;">Outbound email successfully saved to your scheduled queue!</span>
                     </div>
                 """, unsafe_allow_html=True)
             else:
                 # Placeholder for the active state
                 status_box = st.empty()
                 status_box.markdown("""
-                    <div style="background-color: #FEF9E7; border-left: 5px solid #F39C12; padding: 15px; border-radius: 4px; margin-top: 20px;">
-                        <b style="color: #7D6608; font-size: 15px;">⏳ Sending email...</b><br>
-                        <span style="color: #515A5A; font-size: 13px;">Accessing Google API cloud relays. Please wait...</span>
+                    <div style="background-color: #FFFDF5; border-left: 5px solid #D69E2E; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                        <b style="color: #975A16; font-size: 15px;">⏳ Sending email...</b><br>
+                        <span style="color: #718096; font-size: 13px;">Accessing Google API cloud relays. Please wait...</span>
                     </div>
                 """, unsafe_allow_html=True)
                 
@@ -188,44 +206,44 @@ if "Compose" in menu:
                     
                     # Overwrite placeholder with a highly visible custom Success Highlight Row
                     status_box.markdown("""
-                        <div style="background-color: #E8F8F5; border-left: 5px solid #27AE60; padding: 15px; border-radius: 4px; margin-top: 20px;">
-                            <b style="color: #117A65; font-size: 15px;">✅ Email sent successfully!</b><br>
-                            <span style="color: #196F3D; font-size: 13px;">Dispatch confirmed. Message has left your Gmail account successfully.</span>
+                        <div style="background-color: #F0FFF4; border-left: 5px solid #38A169; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                            <b style="color: #276749; font-size: 15px;">✅ Email sent successfully!</b><br>
+                            <span style="color: #2F855A; font-size: 13px;">Dispatch confirmed. Message has left your Gmail account successfully.</span>
                         </div>
                     """, unsafe_allow_html=True)
                     st.toast("Email Dispatched!", icon="🚀")
                     
                 except Exception as e:
                     status_box.markdown(f"""
-                        <div style="background-color: #FADBD8; border-left: 5px solid #CB4335; padding: 15px; border-radius: 4px; margin-top: 20px;">
-                            <b style="color: #78281F; font-size: 15px;">❌ Delivery Failed</b><br>
-                            <span style="color: #922B21; font-size: 13px;">Handshake Refused: {str(e)}</span>
+                        <div style="background-color: #FFF5F5; border-left: 5px solid #E53E3E; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                            <b style="color: #9B2C2C; font-size: 15px;">❌ Delivery Failed</b><br>
+                            <span style="color: #C53030; font-size: 13px;">Handshake Refused: {str(e)}</span>
                         </div>
                     """, unsafe_allow_html=True)
         else:
             st.markdown("""
-                <div style="background-color: #FADBD8; border-left: 5px solid #CB4335; padding: 15px; border-radius: 4px; margin-top: 20px;">
-                    <b style="color: #78281F; font-size: 15px;">⚠️ Validation Error</b><br>
-                    <span style="color: #922B21; font-size: 13px;">Please make sure the TO, SUBJECT, and MESSAGE blocks are filled out.</span>
+                <div style="background-color: #FFF5F5; border-left: 5px solid #E53E3E; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                    <b style="color: #9B2C2C; font-size: 15px;">⚠️ Validation Error</b><br>
+                    <span style="color: #C53030; font-size: 13px;">Please make sure the TO, SUBJECT, and MESSAGE blocks are filled out.</span>
                 </div>
             """, unsafe_allow_html=True)
 
 # --- PANEL BLOCK: SCHEDULED ---
 elif "Scheduled" in menu:
     st.markdown('<div class="main-title">SCHEDULED EMAILS</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color: #5C5A55; font-size: 14px; margin-bottom: 15px;">Emails currently queued up for future automated delivery</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #718096; font-size: 14px; margin-bottom: 20px;">Emails currently queued up for future automated delivery</div>', unsafe_allow_html=True)
     st.write("---")
     if not st.session_state.scheduled_emails:
-        st.info("No scheduled emails in your dispatch queue.")
+        st.markdown('<div style="text-align: center; padding: 5rem 2rem; color: #A0AEC0; font-family: monospace; font-size: 16px;">📅 No scheduled emails in your dispatch queue.</div>', unsafe_allow_html=True)
     else:
         st.write(st.session_state.scheduled_emails)
 
 # --- PANEL BLOCK: HISTORY ---
 elif "History" in menu:
     st.markdown('<div class="main-title">TRANSMISSION HISTORY</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color: #5C5A55; font-size: 14px; margin-bottom: 15px;">Log of all successfully dispatched automated emails</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #718096; font-size: 14px; margin-bottom: 20px;">Log of all successfully dispatched automated emails</div>', unsafe_allow_html=True)
     st.write("---")
     if not st.session_state.email_history:
-        st.info("No sent logs tracked yet.")
+        st.markdown('<div style="text-align: center; padding: 5rem 2rem; color: #A0AEC0; font-family: monospace; font-size: 16px;">⏳ No tracked sent logs available yet.</div>', unsafe_allow_html=True)
     else:
         st.write(st.session_state.email_history)
