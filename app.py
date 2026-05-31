@@ -12,7 +12,7 @@ if "email_history" not in st.session_state:
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Executive Slate Blue & Professional Overrides Injection
+# 2. Executive Theme & Custom Native Component Stylesheet
 st.markdown("""
     <style>
     /* PREVENT SCREEN OVERFLOW & MATCH DESIGN CANVAS */
@@ -22,48 +22,50 @@ st.markdown("""
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .block-container {
-        padding: 1.5rem min(4vw, 3rem) !important;
+        padding: 2rem min(4vw, 3rem) !important;
         max-width: 1400px;
     }
     
-    /* --- EXECUTIVE CHARCOAL SIDEBAR --- */
+    /* --- SIDEBAR NAVIGATION BRAND STYLING --- */
     [data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #E2E8F0 !important;
     }
     
-    /* BRAND HEADINGS STYLE */
     .sidebar-logo {
         font-size: 22px;
         font-weight: 700;
         color: #FFFFFF;
         letter-spacing: 0.5px;
-        padding: 1rem 0;
+        padding: 0.5rem 0 1.5rem 0;
         display: flex;
         align-items: center;
         gap: 10px;
     }
     .sidebar-logo span {
-        color: #38BDF8;
+        color: #E05621;
     }
     
+    /* FIX FOR TITLE CLIPPING ISSUE */
     .main-title {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         font-weight: 700 !important;
         color: #0F172A !important;
-        font-size: 28px !important;
+        font-size: 32px !important;
+        line-height: 1.3 !important;
+        margin-top: 5px !important;
         margin-bottom: 2px !important;
         letter-spacing: -0.5px;
     }
     
-    /* MINIMALIST CONTEMPORARY LABEL STYLING */
+    /* FIELD LABELS */
     label, .custom-input-label {
         color: #475569 !important;
         font-weight: 600 !important;
         text-transform: uppercase;
         font-size: 11px !important;
         letter-spacing: 0.5px;
-        margin-bottom: 4px !important;
+        margin-bottom: 6px !important;
         display: block;
     }
 
@@ -80,29 +82,31 @@ st.markdown("""
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Uniform sizing height variables */
     .stTextInput input {
-        height: 40px !important;
+        height: 42px !important;
         padding: 8px 12px !important;
     }
-    
     .stTextArea textarea {
         padding: 10px 12px !important;
     }
 
-    /* Force Selectbox styling to perfectly match text input boxes */
+    /* Selectbox Styling Adjustments */
     div[data-testid="stSelectbox"] [data-baseweb="select"] {
-        height: 40px !important;
+        height: 42px !important;
         background-color: #FFFFFF !important;
         border-radius: 6px !important;
         border: none !important;
     }
-    
     div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:first-child {
         background-color: transparent !important;
-        padding-top: 4px !important;
+        padding-top: 5px !important;
         padding-left: 4px !important;
         color: #0F172A !important;
+    }
+    
+    /* CUSTOM SELECTBOX CHEVRON COLOR ACCENT */
+    div[data-testid="stSelectbox"] svg {
+        color: #E05621 !important;
     }
     
     /* Input element active styling */
@@ -112,13 +116,13 @@ st.markdown("""
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
     }
 
-    /* --- NATIVE DATETIME PICKER INJECTION STYLES --- */
+    /* --- NATIVE COMBINED DATETIME PICKER WRAPPER --- */
     .native-picker-container {
         width: 100%;
     }
     .native-datetime-el {
         width: 100%;
-        height: 40px;
+        height: 42px;
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
@@ -135,11 +139,18 @@ st.markdown("""
         outline: none !important;
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
     }
+    
+    /* CUSTOM NATIVE CALENDAR ICON COLOR ACCENT */
+    .native-datetime-el::-webkit-calendar-picker-indicator {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e05621' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+        cursor: pointer;
+        transform: scale(1.1);
+    }
 
-    /* --- SLATE BLUE NAVIGATION OVERRIDES --- */
+    /* --- SIDEBAR RADIO BUTTON NAVIGATION OVERRIDES --- */
     div[data-testid="stRadio"] > div {
         background-color: transparent !important;
-        gap: 4px !important;
+        gap: 6px !important;
         display: flex !important;
         flex-direction: column !important;
     }
@@ -147,10 +158,10 @@ st.markdown("""
     div[data-testid="stRadio"] label {
         background-color: transparent !important;
         border: none !important;
-        border-radius: 6px !important;
-        padding: 10px 14px !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
         color: #94A3B8 !important;
-        font-size: 14px !important;
+        font-size: 15px !important;
         font-weight: 500 !important;
         transition: all 0.15s ease !important;
         cursor: pointer !important;
@@ -158,7 +169,6 @@ st.markdown("""
         width: 100% !important;
     }
     
-    /* Strip Streamlit radio circles */
     div[data-testid="stRadio"] label div[data-testid="stMarkdownContainer"]::before,
     div[data-testid="stRadio"] div[data-testid="stWidgetWrapped-true"] {
         display: none !important;
@@ -167,12 +177,12 @@ st.markdown("""
         display: none !important;
     }
     
-    /* Active State Nav Tab Indicator */
+    /* Active Tab Highlight Style Matching Image Reference */
     div[data-testid="stRadio"] div[data-checked="true"] label {
-        background-color: #1A56DB !important;
+        background-color: #E05621 !important;
         color: #FFFFFF !important;
         font-weight: 600 !important;
-        box-shadow: 0 2px 4px rgba(26, 86, 219, 0.1) !important;
+        box-shadow: 0 4px 12px rgba(224, 86, 33, 0.25) !important;
     }
     
     div[data-testid="stRadio"] label:hover:not([data-checked="true"]) {
@@ -180,20 +190,20 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* HIGH-CONTRAST CALL-TO-ACTIONS */
+    /* FORM SUBMIT BUTTONS */
     div.stButton > button:first-child {
-        background-color: #1A56DB !important;
+        background-color: #E05621 !important;
         color: #FFFFFF !important;
         border-radius: 6px !important;
-        border: 1px solid #1A56DB !important;
+        border: 1px solid #E05621 !important;
         font-weight: 600 !important;
         font-size: 14px !important;
-        padding: 0.5rem 1.5rem !important;
+        padding: 0.6rem 1.75rem !important;
         transition: all 0.15s ease;
     }
     div.stButton > button:first-child:hover {
-        background-color: #1E429F !important;
-        border-color: #1E429F !important;
+        background-color: #C2410C !important;
+        border-color: #C2410C !important;
     }
     
     div.stButton > button[key*="clear_btn"] {
@@ -205,18 +215,27 @@ st.markdown("""
         background-color: #F9FAFB !important;
     }
     
-    /* SYSTEM CONNECTIVITY CONDENSED FOOTER */
+    /* FOOTER STATUS BADGE */
     .status-badge {
         background-color: #0F172A;
         color: #34D399;
-        padding: 10px 12px;
+        padding: 12px;
         border-radius: 6px;
         font-size: 12px;
         border: 1px solid #334155;
     }
     
     hr {
-        margin: 1rem 0 !important;
+        margin: 1.25rem 0 !important;
+    }
+
+    /* Style block to completely hide the internal synchronization placeholder text-box */
+    div[data-testid="stVisualElementContainer"]:has(input[aria-label="picker_internal"]) {
+        display: none !important;
+        position: absolute !important;
+        height: 0px !important;
+        width: 0px !important;
+        overflow: hidden !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -232,13 +251,13 @@ with st.sidebar:
         "Navigation Menu", 
         [
             "📝  Compose", 
-            f"📅  Scheduled  ({scheduled_count})", 
-            f"⏳  History  ({history_count})"
+            f"📅  Scheduled      {scheduled_count}", 
+            f"⏳  History          {history_count}"
         ], 
         label_visibility="collapsed"
     )
     
-    st.markdown("<br>" * 11, unsafe_allow_html=True)
+    st.markdown("<br>" * 10, unsafe_allow_html=True)
     st.markdown('<div class="status-badge"><span style="color:#10B981;">●</span> Gmail ready<br><span style="color:#94A3B8; font-size:11px;">Configured & Active</span></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
@@ -254,19 +273,18 @@ if "Compose" in menu:
         from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
         
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
-    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=140)
+    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150)
 
     col3, col4 = st.columns(2)
     with col3:
         st.markdown('<span class="custom-input-label">Schedule Date & Time</span>', unsafe_allow_html=True)
         
-        # Injecting native HTML5 browser calendar element with synced communication layer
+        # Combined HTML5 date-time channel syncing data loops instantly via page message handlers
         st.html("""
             <div class="native-picker-container">
                 <input type="datetime-local" id="picker_el" class="native-datetime-el" value="2026-05-31T12:01" onchange="parent.postMessage({type: 'streamlit:setComponentValue', value: this.value}, '*')">
             </div>
             <script>
-                // Continuous data pipe safety loop back to Streamlit engine 
                 const picker = document.getElementById('picker_el');
                 picker.addEventListener('input', (e) => {
                     window.parent.postMessage({type: 'streamlit:setComponentValue', value: e.target.value}, '*');
@@ -274,7 +292,7 @@ if "Compose" in menu:
             </script>
         """)
         
-        # Hidden query register to capture variables safely without rendering duplicate elements
+        # Form submission registry element 
         datetime_value = st.text_input("picker_internal", value="2026-05-31T12:01", label_visibility="collapsed")
         
     with col4:
@@ -282,7 +300,7 @@ if "Compose" in menu:
         
     st.write("")
 
-    # Interaction Control Action Bar Row
+    # Interaction Action Row Bar
     ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([6, 1, 1.2])
     with ctrl_col2:
         if st.button("Clear", key="clear_btn", use_container_width=True):
@@ -291,11 +309,10 @@ if "Compose" in menu:
     with ctrl_col3:
         send_clicked = st.button("Send Email", key="send_btn", use_container_width=True)
 
-    # Feedback Cards Processing Block
+    # Feedback Engine Processing Cards
     if send_clicked:
         if to_field and subject_field and body_field:
             try:
-                # Format clean string representation for log records
                 parsed_dt = datetime.strptime(datetime_value.replace("T", " "), "%Y-%m-%d %H:%M")
                 formatted_timestamp = parsed_dt.strftime('%Y-%m-%d %I:%M %p')
             except:
