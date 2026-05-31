@@ -100,6 +100,15 @@ st.markdown("""
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput input {
         padding-right: 45px !important;
     }
+
+    .custom-input {
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+        padding: 10px !important;
+        width: 100%;
+        color: #0F172A;
+    }
     
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput > div::after {
         content: '📅';
