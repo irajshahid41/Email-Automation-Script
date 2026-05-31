@@ -90,9 +90,10 @@ st.markdown("""
         padding: 10px 12px !important;
     }
 
-    /* Target the specific Schedule Date text field and inject the orange calendar icon cleanly inside */
+    /* Target the text input element container by looking for our explicit label name match */
+    div[data-testid="element-container"]:has(label:contains("SCHEDULE DATE & TIME")) input,
     div[data-testid="element-container"]:has(input[aria-label="SCHEDULE DATE & TIME"]) input {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23E05621' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3C...%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23E05621' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") !important;
         background-repeat: no-repeat !important;
         background-position: calc(100% - 14px) center !important;
         padding-right: 40px !important;
@@ -246,7 +247,7 @@ if "Compose" in menu:
 
     col3, col4 = st.columns(2)
     with col3:
-        # Native, crisp element with unique key bindings ensuring layout persistence
+        # Crisp input text node
         datetime_value = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM", key="compose_date_field")
         
     with col4:
