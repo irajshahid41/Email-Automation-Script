@@ -110,7 +110,9 @@ st.markdown("""
         color: #0F172A;
     }
 
-    div[data-testid="stDateInput"] input, 
+
+/* Match datetime_input background and border to your text inputs */
+div[data-testid="stDateInput"] input, 
 div[data-testid="stDateInput"] div[data-baseweb="input"] {
     background-color: #FFFFFF !important;
     border: 1px solid #CBD5E1 !important;
@@ -121,20 +123,7 @@ div[data-testid="stDateInput"] div[data-baseweb="input"] {
 /* Ensure the calendar icon color matches your theme */
 div[data-testid="stDateInput"] svg {
     color: #E05621 !important;
-    
-    div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput > div::after {
-        content: '📅';
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 16px;
-        z-index: 10;
-        pointer-events: none;
-        display: block !important;
-        visibility: visible !important;
-    }
-    
+}
     /* TARGET SPECIFIC CALENDAR PICKER FIELD USING ITS KEY FOR INLINE ICON POSITIONING */
     div[data-testid="element-container"]:has(div[data-testid="stTextInputRootElement"] button[key="compose_date_field"]) .stTextInput > div,
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput > div {
