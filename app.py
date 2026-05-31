@@ -93,17 +93,18 @@ st.markdown("""
         padding: 8px 12px !important;
     }
     
-    /* TARGET SPECIFIC CALENDAR PICKER FIELD FOR INLINE ICON POSITIONING */
-    div[data-testid="element-container"]:has(input[id="compose_date_field"]) .stTextInput > div {
+    /* TARGET SPECIFIC CALENDAR PICKER FIELD USING ITS KEY FOR INLINE ICON POSITIONING */
+    div[data-testid="element-container"]:has(div[data-testid="stTextInputRootElement"] button[key="compose_date_field"]) .stTextInput > div,
+    div[data-testid="element-container"]:has(input[key="compose_date_field"]) .stTextInput > div {
         position: relative;
     }
     
-    div[data-testid="element-container"]:has(input[id="compose_date_field"]) .stTextInput input {
+    div[data-testid="element-container"]:has(div[data-testid="stTextInputRootElement"]) .stTextInput input {
         padding-right: 40px !important;
     }
     
     /* Injecting pristine right-aligned calendar symbol element inline */
-    div[data-testid="element-container"]:has(input[id="compose_date_field"]) .stTextInput > div::after {
+    div[data-testid="element-container"]:has(div[data-testid="stTextInputRootElement"]) .stTextInput > div::after {
         content: '📅';
         position: absolute;
         right: 14px;
@@ -267,11 +268,11 @@ if "Compose" in menu:
     # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
     col3, col4 = st.columns(2)
     with col3:
-        # Native widget engine provides native sizing context, while CSS pseudo-elements handle the icon layout beautifully
+        # Replaced invalid parameter 'id' with 'key' to natively clear error and match style metrics
         datetime_value = st.text_input(
             "SCHEDULE DATE & TIME", 
             value="2026-05-31 12:01 PM", 
-            id="compose_date_field"
+            key="compose_date_field"
         )
         
     with col4:
