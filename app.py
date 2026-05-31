@@ -13,7 +13,7 @@ if "email_history" not in st.session_state:
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Executive Slate Blue & Minimalist Chalk Stylesheet Injection
+# 2. Executive Slate Blue Stylesheet Injection
 st.markdown("""
     <style>
     /* GLOBAL CANVASES STYLING */
@@ -40,13 +40,13 @@ st.markdown("""
         color: #FFFFFF;
         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         letter-spacing: 0.5px;
-        padding: 1.5rem 0;
+        padding: 1.5rem 0 1rem 0;
         display: flex;
         align-items: center;
         gap: 10px;
     }
     .sidebar-logo span {
-        color: #38BDF8; /* Subtle light blue accent for 'FLOW' */
+        color: #38BDF8;
     }
     
     .main-title {
@@ -110,6 +110,50 @@ st.markdown("""
         opacity: 1 !important;
     }
 
+    /* --- SLATE BLUE NAVIGATION OVERRIDES --- */
+    div[data-testid="stRadio"] > div {
+        background-color: transparent !important;
+        gap: 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    div[data-testid="stRadio"] label {
+        background-color: transparent !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 10px 14px !important;
+        color: #94A3B8 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        transition: all 0.15s ease !important;
+        cursor: pointer !important;
+        display: flex !important;
+        width: 100% !important;
+    }
+    
+    /* Strip Streamlit radio circles */
+    div[data-testid="stRadio"] label div[data-testid="stMarkdownContainer"]::before,
+    div[data-testid="stRadio"] div[data-testid="stWidgetWrapped-true"] {
+        display: none !important;
+    }
+    div[data-testid="stRadio"] input[type="radio"] {
+        display: none !important;
+    }
+    
+    /* Active State Nav Tab Indicator */
+    div[data-testid="stRadio"] div[data-checked="true"] label {
+        background-color: #1A56DB !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        box-shadow: 0 2px 4px rgba(26, 86, 219, 0.1) !important;
+    }
+    
+    div[data-testid="stRadio"] label:hover:not([data-checked="true"]) {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #FFFFFF !important;
+    }
+
     /* HIGH-CONTRAST PROFESSIONAL EXECUTIVE CALL-TO-ACTIONS */
     div.stButton > button:first-child {
         background-color: #1A56DB !important;
@@ -153,96 +197,132 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Clean Sidebar Architecture (With navigation widgets dropped out completely)
+# 3. Sidebar Navigation Structure
 with st.sidebar:
     st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
     
-    # Large vertical spacer pushing the configuration status block nicely to the absolute bottom area
-    st.markdown("<br>" * 18, unsafe_allow_html=True)
+    # Calculate counters dynamically
+    scheduled_count = len(st.session_state.scheduled_emails)
+    history_count = len(st.session_state.email_history)
+    
+    menu = st.radio(
+        "Navigation Menu", 
+        [
+            "📝  Compose", 
+            f"📅  Scheduled  ({scheduled_count})", 
+            f"⏳  History  ({history_count})"
+        ], 
+        label_visibility="collapsed"
+    )
+    
+    st.markdown("<br>" * 10, unsafe_allow_html=True)
     st.markdown('<div class="status-badge"><span style="color:#10B981;">●</span> Gmail ready<br><span style="color:#94A3B8; font-size:11px;">Configured & Active</span></div>', unsafe_allow_html=True)
 
-# --- DIRECT ACCESS COMPOSE SCREEN BLOCK ---
-st.markdown('<div class="main-title">New Email</div>', unsafe_allow_html=True)
-st.markdown('<div style="color: #64748B; font-size: 14px; margin-bottom: 20px;">Compose and schedule your email distribution loops</div>', unsafe_allow_html=True)
-st.write("---")
+# --- PANEL BLOCK: COMPOSE LOOP ---
+if "Compose" in menu:
+    st.markdown('<div class="main-title">New Email</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #64748B; font-size: 14px; margin-bottom: 20px;">Compose and schedule your email distribution loops</div>', unsafe_allow_html=True)
+    st.write("---")
 
-col1, col2 = st.columns(2)
-with col1:
-    to_field = st.text_input("TO", placeholder="recipient@example.com")
-with col2:
-    from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
-    
-subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
-body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=200)
-
-col3, col4 = st.columns(2)
-with col3:
-    time_input_string = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM")
-with col4:
-    send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
-    
-st.write("")
-
-# 1. Interaction Control Action Bar Row
-ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([6, 1, 1.2])
-with ctrl_col2:
-    if st.button("Clear", key="clear_btn", use_container_width=True):
-        st.rerun()
+    col1, col2 = st.columns(2)
+    with col1:
+        to_field = st.text_input("TO", placeholder="recipient@example.com")
+    with col2:
+        from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
         
-with ctrl_col3:
-    send_clicked = st.button("Send Email", key="send_btn", use_container_width=True)
+    subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
+    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=200)
 
-# 2. Modern Feedback Cards Container
-if send_clicked:
-    if to_field and subject_field and body_field:
-        email_payload = {
-            "to": to_field,
-            "from": from_field,
-            "subject": subject_field,
-            "body": body_field,
-            "timestamp": time_input_string
-        }
+    col3, col4 = st.columns(2)
+    with col3:
+        time_input_string = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM")
+    with col4:
+        send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
         
-        if "Schedule for later" in send_mode:
-            st.session_state.scheduled_emails.append(email_payload)
-            st.markdown("""
-                <div style="background-color: #EFF6FF; border-left: 4px solid #1A56DB; padding: 14px; border-radius: 6px; margin-top: 15px;">
-                    <b style="color: #1E429F; font-size: 14px;">📅 Queued Successfully</b><br>
-                    <span style="color: #4B5563; font-size: 13px;">This message has been securely processed and added to your outbound schedule list.</span>
-                </div>
-            """, unsafe_allow_html=True)
-        else:
-            status_box = st.empty()
-            status_box.markdown("""
-                <div style="background-color: #FFFBEB; border-left: 4px solid #D97706; padding: 14px; border-radius: 6px; margin-top: 15px;">
-                    <b style="color: #92400E; font-size: 14px;">⏳ Dispatched Processing</b><br>
-                    <span style="color: #4B5563; font-size: 13px;">Communicating secure handshakes over cloud relay connections...</span>
-                </div>
-            """, unsafe_allow_html=True)
+    st.write("")
+
+    # Interaction Control Action Bar Row
+    ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([6, 1, 1.2])
+    with ctrl_col2:
+        if st.button("Clear", key="clear_btn", use_container_width=True):
+            st.rerun()
             
-            try:
-                send_email(to_field, subject_field, body_field)
-                st.session_state.email_history.append(email_payload)
-                
+    with ctrl_col3:
+        send_clicked = st.button("Send Email", key="send_btn", use_container_width=True)
+
+    # Feedback Cards
+    if send_clicked:
+        if to_field and subject_field and body_field:
+            email_payload = {
+                "to": to_field,
+                "from": from_field,
+                "subject": subject_field,
+                "body": body_field,
+                "timestamp": time_input_string
+            }
+            
+            if "Schedule for later" in send_mode:
+                st.session_state.scheduled_emails.append(email_payload)
+                st.markdown("""
+                    <div style="background-color: #EFF6FF; border-left: 4px solid #1A56DB; padding: 14px; border-radius: 6px; margin-top: 15px;">
+                        <b style="color: #1E429F; font-size: 14px;">📅 Queued Successfully</b><br>
+                        <span style="color: #4B5563; font-size: 13px;">This message has been securely processed and added to your outbound schedule list.</span>
+                    </div>
+                """, unsafe_allow_html=True)
+                st.rerun()
+            else:
+                status_box = st.empty()
                 status_box.markdown("""
-                    <div style="background-color: #F0FDF4; border-left: 4px solid #16A34A; padding: 14px; border-radius: 6px; margin-top: 15px;">
-                        <b style="color: #166534; font-size: 14px;">✅ Transaction Completed</b><br>
-                        <span style="color: #4B5563; font-size: 13px;">Delivery verified. Email safely passed to standard server routing.</span>
+                    <div style="background-color: #FFFBEB; border-left: 4px solid #D97706; padding: 14px; border-radius: 6px; margin-top: 15px;">
+                        <b style="color: #92400E; font-size: 14px;">⏳ Dispatched Processing</b><br>
+                        <span style="color: #4B5563; font-size: 13px;">Communicating secure handshakes over cloud relay connections...</span>
                     </div>
                 """, unsafe_allow_html=True)
-                st.toast("Email Dispatched!", icon="🚀")
                 
-            except Exception as e:
-                status_box.markdown(f"""
-                    <div style="background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 14px; border-radius: 6px; margin-top: 15px;">
-                        <b style="color: #991B1B; font-size: 14px;">❌ Cloud Connection Timeout</b><br>
-                        <span style="color: #4B5563; font-size: 13px;">API error returned: {str(e)}</span>
-                    </div>
-                """, unsafe_allow_html=True)
+                try:
+                    send_email(to_field, subject_field, body_field)
+                    st.session_state.email_history.append(email_payload)
+                    
+                    status_box.markdown("""
+                        <div style="background-color: #F0FDF4; border-left: 4px solid #16A34A; padding: 14px; border-radius: 6px; margin-top: 15px;">
+                            <b style="color: #166534; font-size: 14px;">✅ Transaction Completed</b><br>
+                            <span style="color: #4B5563; font-size: 13px;">Delivery verified. Email safely passed to standard server routing.</span>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    st.toast("Email Dispatched!", icon="🚀")
+                    st.rerun()
+                    
+                except Exception as e:
+                    status_box.markdown(f"""
+                        <div style="background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 14px; border-radius: 6px; margin-top: 15px;">
+                            <b style="color: #991B1B; font-size: 14px;">❌ Cloud Connection Timeout</b><br>
+                            <span style="color: #4B5563; font-size: 13px;">API error returned: {str(e)}</span>
+                        </div>
+                    """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+                <div style="background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 14px; border-radius: 6px; margin-top: 15px;">
+                    <b style="color: #991B1B; font-size: 14px;">⚠️ Missing Parameters</b><br>
+                    <span style="color: #4B5563; font-size: 13px;">Please fill out the recipient, subject line, and message area to clear verification.</span>
+                </div>
+            """, unsafe_allow_html=True)
+
+# --- PANEL BLOCK: SCHEDULED ---
+elif "Scheduled" in menu:
+    st.markdown('<div class="main-title">Scheduled Emails</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #64748B; font-size: 14px; margin-bottom: 20px;">Emails currently queued up for future automated delivery</div>', unsafe_allow_html=True)
+    st.write("---")
+    if not st.session_state.scheduled_emails:
+        st.info("No scheduled emails in your dispatch queue.")
     else:
-        st.markdown("""
-            <div style="background-color: #FEF2F2; border-left: 4px solid #DC2626; padding: 14px; border-radius: 6px; margin-top: 15px;">
-                <b style="color: #991B1B; font-size: 14px;">⚠️ Missing Parameters</b><br>
-                <span style="color: #4B5563; font-size: 13px;">Please fill out the recipient, subject line, and message area to clear verification.</span>
-            </div>
-        """, unsafe_allow_html=True)
+        st.write(st.session_state.scheduled_emails)
+
+# --- PANEL BLOCK: HISTORY ---
+elif "History" in menu:
+    st.markdown('<div class="main-title">Transmission History</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #64748B; font-size: 14px; margin-bottom: 20px;">Log of all successfully dispatched automated emails</div>', unsafe_allow_html=True)
+    st.write("---")
+    if not st.session_state.email_history:
+        st.info("No sent logs tracked yet.")
+    else:
+        st.write(st.session_state.email_history)
