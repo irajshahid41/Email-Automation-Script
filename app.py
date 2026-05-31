@@ -113,7 +113,7 @@ if "Compose" in menu:
         from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
         
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
-    body_field = st.st.text_area("MESSAGE", placeholder="Write your message here...", height=200)
+    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=200)
     
     col3, col4 = st.columns(2)
     with col3:
@@ -155,7 +155,7 @@ if "Compose" in menu:
                     with st.spinner("Accessing Google API cloud relays..."):
                         try:
                             # Triggers the actual authentication engine from email_service.py
-                            response = send_email(to_field, subject_field, body_field)
+                            send_email(to_field, subject_field, body_field)
                             st.session_state.email_history.append(email_payload)
                             st.success("🚀 Dispatch confirmed! Message has left your Gmail account successfully.")
                         except Exception as e:
