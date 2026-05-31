@@ -321,8 +321,9 @@ if "Compose" in menu:
       )
 
     with col4:
-       send_mode = st.selectbox(
-          "SEND MODE", 
+        st.markdown('<label class="custom-input-label">SEND MODE</label>', unsafe_allow_html=True)
+        send_mode = st.selectbox(
+          "MODE", 
           ["Send Immediately", "Schedule for later"], 
           label_visibility="collapsed",
           key="compose_send_mode"
