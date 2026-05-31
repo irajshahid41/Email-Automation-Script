@@ -1,20 +1,30 @@
 import streamlit as st
 import json
 from datetime import datetime
-# Import the official shadcn ui date-time component picker
-import shadcn_ui as ui
 # Import your secured engine logic
 from email_service import send_email
 
-# 1. Initialize Application Trackers
+# 1. Initialize Persistent Session Storage Trackers
 if "scheduled_emails" not in st.session_state:
     st.session_state.scheduled_emails = []
 if "email_history" not in st.session_state:
     st.session_state.email_history = []
 
+# Persistent memory locks to prevent text from disappearing on script reruns
+if "to_msg" not in st.session_state:
+    st.session_state.to_msg = ""
+if "from_msg" not in st.session_state:
+    st.session_state.from_msg = ""
+if "subject_msg" not in st.session_state:
+    st.session_state.subject_msg = ""
+if "body_msg" not in st.session_state:
+    st.session_state.body_msg = ""
+if "dt_picker_val" not in st.session_state:
+    st.session_state.dt_picker_val = "2026-05-31T12:01"
+
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Executive Theme & Icon Overrides Injection
+# 2. Executive Theme & Native Overlay Icon Overrides Injection
 st.markdown("""
     <style>
     /* PREVENT SCREEN OVERFLOW & MATCH DESIGN CANVAS */
@@ -48,7 +58,7 @@ st.markdown("""
         color: #E05621;
     }
     
-    /* MAIN TITLE HEADING CONTAINER */
+    /* FIX FOR TITLE CLIPPING ISSUE */
     .main-title {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         font-weight: 700 !important;
@@ -74,14 +84,14 @@ st.markdown("""
     /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
     .stTextInput input, .stTextArea textarea, 
     div[data-testid="stSelectbox"] > div,
-    div[data-baseweb="select"],
-    div[data-testid="stIframe"] {
+    div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
         color: #0F172A !important;
         font-size: 14px !important;
         transition: all 0.15s ease-in-out;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     }
 
     .stTextInput input {
@@ -92,7 +102,7 @@ st.markdown("""
         padding: 10px 12px !important;
     }
 
-    /* Selectbox Custom Adjustments */
+    /* Selectbox Styling Adjustments */
     div[data-testid="stSelectbox"] [data-baseweb="select"] {
         height: 42px !important;
         background-color: #FFFFFF !important;
@@ -106,7 +116,7 @@ st.markdown("""
         color: #0F172A !important;
     }
     
-    /* MATCHING ORANGE SELECTBOX DROPDOWN CHEVRON ICON */
+    /* CUSTOM SELECTBOX CHEVRON COLOR ACCENT (ORANGE) */
     div[data-testid="stSelectbox"] svg {
         color: #E05621 !important;
     }
@@ -116,6 +126,37 @@ st.markdown("""
     div[data-testid="stSelectbox"] > div:focus-within {
         border-color: #1A56DB !important;
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
+    }
+
+    /* --- NATIVE COMBINED DATETIME PICKER ACCENTS --- */
+    .native-picker-container {
+        width: 100%;
+    }
+    .native-datetime-el {
+        width: 100%;
+        height: 42px;
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+        color: #0F172A !important;
+        font-size: 14px !important;
+        font-family: inherit;
+        padding: 8px 12px !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+        box-sizing: border-box;
+        transition: all 0.15s ease-in-out;
+    }
+    .native-datetime-el:focus {
+        border-color: #1A56DB !important;
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
+    }
+    
+    /* CALENDAR ICON ACCENT REPLACEMENT MATCHING CHOSEN PALETTE */
+    .native-datetime-el::-webkit-calendar-picker-indicator {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e05621' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
+        cursor: pointer;
+        transform: scale(1.15);
     }
 
     /* --- SIDEBAR RADIO BUTTON NAVIGATION OVERRIDES --- */
@@ -148,7 +189,7 @@ st.markdown("""
         display: none !important;
     }
     
-    /* Active Orange Tab Highlight Style Matching Image Reference */
+    /* Active Tab Highlight Style Matching Image Reference */
     div[data-testid="stRadio"] div[data-checked="true"] label {
         background-color: #E05621 !important;
         color: #FFFFFF !important;
@@ -199,6 +240,15 @@ st.markdown("""
     hr {
         margin: 1.25rem 0 !important;
     }
+
+    /* COMPLETELY REMOVES THE SECOND SYSTEM BOX INPUT ROW VIA ELEMENT PARENT HIERARCHY */
+    div[data-testid="stInputElementContainer"]:has(input[aria-label="picker_internal"]),
+    div[data-testid="stWidgetFormWrapper"]:has(input[aria-label="picker_internal"]) {
+        display: none !important;
+        height: 0px !important;
+        width: 0px !important;
+        visibility: hidden !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -230,24 +280,32 @@ if "Compose" in menu:
 
     col1, col2 = st.columns(2)
     with col1:
-        to_field = st.text_input("TO", placeholder="recipient@example.com")
+        to_field = st.text_input("TO", value=st.session_state.to_msg, placeholder="recipient@example.com", key="to_msg")
     with col2:
-        from_field = st.text_input("FROM (YOUR GMAIL)", placeholder="you@gmail.com")
+        from_field = st.text_input("FROM (YOUR GMAIL)", value=st.session_state.from_msg, placeholder="you@gmail.com", key="from_msg")
         
-    subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
-    body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150)
+    subject_field = st.text_input("SUBJECT", value=st.session_state.subject_msg, placeholder="Email subject line", key="subject_msg")
+    body_field = st.text_area("MESSAGE", value=st.session_state.body_msg, placeholder="Write your message here...", height=150, key="body_msg")
 
     col3, col4 = st.columns(2)
     with col3:
         st.markdown('<span class="custom-input-label">Schedule Date & Time</span>', unsafe_allow_html=True)
         
-        # Native Shadcn Date-Time Input Picker component that fits perfectly
-        # It displays exactly like the native overlay and saves state flawlessly!
-        datetime_value = ui.date_picker(
-            key="schedule_date_picker",
-            mode="datetime",
-            default_value="2026-05-31 12:01 PM"
-        )
+        # Native Browser Calendar dropdown element wrapper with direct real-time JavaScript parent event pipeline
+        st.html(f"""
+            <div class="native-picker-container">
+                <input type="datetime-local" id="picker_el" class="native-datetime-el" value="{st.session_state.dt_picker_val}" onchange="parent.postMessage({{type: 'streamlit:setComponentValue', value: this.value}}, '*')">
+            </div>
+            <script>
+                const picker = document.getElementById('picker_el');
+                picker.addEventListener('input', (e) => {{
+                    window.parent.postMessage({{type: 'streamlit:setComponentValue', value: e.target.value}}, '*');
+                }});
+            </script>
+        """)
+        
+        # Hidden variable capture endpoint (completely hidden cleanly by the CSS structural filter rule above)
+        datetime_value = st.text_input("picker_internal", value=st.session_state.dt_picker_val, label_visibility="collapsed", key="dt_picker_val")
         
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
@@ -258,6 +316,11 @@ if "Compose" in menu:
     ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([6, 1, 1.2])
     with ctrl_col2:
         if st.button("Clear", key="clear_btn", use_container_width=True):
+            st.session_state.to_msg = ""
+            st.session_state.from_msg = ""
+            st.session_state.subject_msg = ""
+            st.session_state.body_msg = ""
+            st.session_state.dt_picker_val = "2026-05-31T12:01"
             st.rerun()
             
     with ctrl_col3:
@@ -266,12 +329,18 @@ if "Compose" in menu:
     # Feedback Engine Processing Cards
     if send_clicked:
         if to_field and subject_field and body_field:
+            try:
+                parsed_dt = datetime.strptime(datetime_value.replace("T", " "), "%Y-%m-%d %H:%M")
+                formatted_timestamp = parsed_dt.strftime('%Y-%m-%d %I:%M %p')
+            except:
+                formatted_timestamp = datetime_value
+
             email_payload = {
                 "to": to_field,
                 "from": from_field,
                 "subject": subject_field,
                 "body": body_field,
-                "timestamp": str(datetime_value)
+                "timestamp": formatted_timestamp
             }
             
             if "Schedule for later" in send_mode:
