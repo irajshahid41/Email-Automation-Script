@@ -228,6 +228,7 @@ with st.sidebar:
     st.markdown('<div class="status-badge"><span style="color:#10B981;">●</span> Gmail ready<br><span style="color:#94A3B8; font-size:11px;">Configured & Active</span></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
+# --- PANEL BLOCK: COMPOSE LOOP ---
 if "Compose" in menu:
     st.markdown('<div class="main-title">New Email</div>', unsafe_allow_html=True)
     st.markdown('<div style="color: #64748B; font-size: 14px; margin-bottom: 10px;">Compose and schedule your email distribution loops</div>', unsafe_allow_html=True)
@@ -242,12 +243,11 @@ if "Compose" in menu:
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line", key="compose_subject_field")
     body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150, key="compose_body_field")
 
-   col3, col4 = st.columns(2)
+    # --- THIS IS THE FIXED AND PERFECTLY ALIGNED BLOCK ---
+    col3, col4 = st.columns(2)
     with col3:
-        # Custom HTML5 Date-Time Engine Injection matching your visual style
         st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
         
-        # Injects a native browser datetime picker with your exact pristine styling parameters
         datetime_html = """
             <input type="datetime-local" 
                    id="schedule_picker" 
@@ -271,8 +271,6 @@ if "Compose" in menu:
             />
         """
         st.components.v1.html(datetime_html, height=45)
-        
-        # Fallback value anchor for your email engine execution flow underneath
         datetime_value = "2026-05-31 12:01 PM"
         
     with col4:
