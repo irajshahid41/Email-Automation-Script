@@ -5,9 +5,9 @@ from email_service import send_email
 
 # 1. Initialize Persistent Application State Trackers
 if "scheduled_emails" not in st.session_state:
-    st.session_state.scheduled_emails = []
+    st.session_state.scheduled_emails = []
 if "email_history" not in st.session_state:
-    st.session_state.email_history = []
+    st.session_state.email_history = []
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
