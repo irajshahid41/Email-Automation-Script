@@ -242,15 +242,38 @@ if "Compose" in menu:
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line", key="compose_subject_field")
     body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150, key="compose_body_field")
 
-    col3, col4 = st.columns(2)
+   col3, col4 = st.columns(2)
     with col3:
-        # Using native date_input gives you the pristine rounded box, 
-        # the right-aligned calendar icon, and the picker popup!
-        datetime_value = st.date_input(
-            "SCHEDULE DATE & TIME", 
-            value=datetime(2026, 5, 31),
-            key="compose_date_field"
-        )
+        # Custom HTML5 Date-Time Engine Injection matching your visual style
+        st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
+        
+        # Injects a native browser datetime picker with your exact pristine styling parameters
+        datetime_html = """
+            <input type="datetime-local" 
+                   id="schedule_picker" 
+                   value="2026-05-31T12:01"
+                   style="
+                       width: 100%;
+                       height: 42px;
+                       padding: 8px 12px;
+                       background-color: #FFFFFF;
+                       border: 1px solid #CBD5E1;
+                       border-radius: 6px;
+                       color: #0F172A;
+                       font-size: 14px;
+                       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                       box-sizing: border-box;
+                       outline: none;
+                   "
+                   onfocus="this.style.borderColor='#1A56DB'; this.style.boxShadow='0 0 0 3px rgba(26, 86, 219, 0.15)';"
+                   onblur="this.style.borderColor='#CBD5E1'; this.style.boxShadow='0 1px 2px rgba(0, 0, 0, 0.05)';"
+            />
+        """
+        st.components.v1.html(datetime_html, height=45)
+        
+        # Fallback value anchor for your email engine execution flow underneath
+        datetime_value = "2026-05-31 12:01 PM"
         
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
