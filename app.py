@@ -307,25 +307,8 @@ if "Compose" in menu:
     col3, col4 = st.columns(2)
     with col3:
       st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
-      st.markdown("""
-        <style>
-           /* Style for both the Date Input and the Selectbox to ensure they match perfectly */
-           div[data-testid="stDateInput"] > div[data-baseweb="input"],
-           div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
-              background-color: #FFFFFF !important;
-              border: 1px solid #CBD5E1 !important;
-              border-radius: 6px !important;
-              height: 42px !important; /* Matches your defined height */
-           }
 
-           /* Ensure the text color is consistent */
-          div[data-testid="stDateInput"] input,
-          div[data-testid="stSelectbox"] div {
-          color: #0F172A !important;
-          }
-       </style>
-      """, unsafe_allow_html=True)
-    datetime_value = st.datetime_input(
+      datetime_value = st.datetime_input(
         "Date Time", 
         value=datetime.now(), 
         label_visibility="collapsed",
