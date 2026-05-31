@@ -114,8 +114,9 @@ with st.sidebar:
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
 if "Compose" in menu:
+    #  NEW VISIBLE LINES:
     st.markdown('<div class="main-title">NEW EMAIL</div>', unsafe_allow_html=True)
-    st.caption("Compose and schedule your email distribution loop")
+    st.markdown('<div style="color: #5C5A55; font-size: 14px; margin-bottom: 15px;">Compose and schedule your email distribution loop</div>', unsafe_allow_html=True)
     st.write("---")
     
     col1, col2 = st.columns(2)
