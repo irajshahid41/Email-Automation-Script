@@ -312,13 +312,13 @@ if "Compose" in menu:
     # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
     col3, col4 = st.columns(2)
     with col3:
-      st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
       datetime_value = st.datetime_input(
-        "Date Time", 
-        value=datetime.now(), 
-        label_visibility="collapsed",
-        key="compose_date_time"
-      )
+          "SCHEDULE DATE & TIME",
+           value=datetime.now(),
+           label_visibility="collapsed",
+           key="compose_date_time"
+       )
+
 
     with col4:
         st.markdown('<label class="custom-input-label">SEND MODE</label>', unsafe_allow_html=True)
