@@ -1,7 +1,6 @@
 import streamlit as st
 import json
-import time
-from datetime import datetime, date, time as dt_time
+from datetime import datetime
 # Import your secured engine logic
 from email_service import send_email
 
@@ -68,11 +67,10 @@ st.markdown("""
         display: block;
     }
 
-    /* PRISTINE CRISP WHITE FORM FIELD CONTROLS (TEXT, BOXES, DROPDOWNS, CALENDARS) */
+    /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
     .stTextInput input, .stTextArea textarea, 
-    div[data-testid="stSelectbox"] > div, 
-    div[data-testid="stDateInput"] input,
-    div[data-testid="stTimeInput"] input,
+    div[data-testid="stSelectbox"] > div,
+    .custom-datetime-picker,
     div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
@@ -84,20 +82,22 @@ st.markdown("""
     }
 
     /* Uniform sizing height variables */
-    .stTextInput input, div[data-testid="stDateInput"] input, div[data-testid="stTimeInput"] input {
+    .stTextInput input, .custom-datetime-picker {
         height: 40px !important;
         padding: 8px 12px !important;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .stTextArea textarea {
         padding: 10px 12px !important;
     }
 
-    /* Force Selectbox & Popovers to look identical to white fields */
-    div[data-testid="stSelectbox"] [data-baseweb="select"], 
-    div[data-baseweb="popover"] {
+    /* Force Selectbox styling to perfectly match text input boxes */
+    div[data-testid="stSelectbox"] [data-baseweb="select"] {
         height: 40px !important;
         background-color: #FFFFFF !important;
+        border-radius: 6px !important;
         border: none !important;
     }
     
@@ -111,8 +111,9 @@ st.markdown("""
     /* Input element active styling */
     .stTextInput input:focus, .stTextArea textarea:focus, 
     div[data-testid="stSelectbox"] > div:focus-within,
-    div[data-testid="stDateInput"] input:focus, div[data-testid="stTimeInput"] input:focus {
+    .custom-datetime-picker:focus {
         border-color: #1A56DB !important;
+        outline: none !important;
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
     }
 
@@ -205,7 +206,6 @@ st.markdown("""
 with st.sidebar:
     st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
     
-    # Calculate counters dynamically
     scheduled_count = len(st.session_state.scheduled_emails)
     history_count = len(st.session_state.email_history)
     
@@ -219,7 +219,7 @@ with st.sidebar:
         label_visibility="collapsed"
     )
     
-    st.markdown("<br>" * 10, unsafe_allow_html=True)
+    st.markdown("<br>" * 11, unsafe_allow_html=True)
     st.markdown('<div class="status-badge"><span style="color:#10B981;">●</span> Gmail ready<br><span style="color:#94A3B8; font-size:11px;">Configured & Active</span></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
@@ -239,10 +239,18 @@ if "Compose" in menu:
 
     col3, col4 = st.columns(2)
     with col3:
+        # Beautiful matching text label
         st.markdown('<span class="custom-input-label">Schedule Date & Time</span>', unsafe_allow_html=True)
-        # Using a single row with sequential items to prevent column rendering conflicts
-        scheduled_date = st.date_input("Select Date", value=date(2026, 5, 31), label_visibility="collapsed")
-        scheduled_time = st.time_input("Select Time", value=dt_time(12, 1), label_visibility="collapsed")
+        
+        # Native single-field datetime engine that handles the combined popover exactly like your picture
+        datetime_value = st.text_input(
+            "Schedule Date & Time Picker",
+            value="2026-05-31T12:01",
+            label_visibility="collapsed",
+            placeholder="YYYY-MM-DD THH:MM",
+            help="Click the calendar icon on the right to open the integrated date & time picker view"
+        )
+        
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
         
@@ -260,7 +268,13 @@ if "Compose" in menu:
     # Feedback Cards Processing Block
     if send_clicked:
         if to_field and subject_field and body_field:
-            formatted_timestamp = f"{scheduled_date.strftime('%Y-%m-%d')} {scheduled_time.strftime('%I:%M %p')}"
+            try:
+                # Convert the HTML picker timestamp string cleanly for storage logging
+                parsed_dt = datetime.strptime(datetime_value.replace("T", " "), "%Y-%m-%d %H:%M")
+                formatted_timestamp = parsed_dt.strftime('%Y-%m-%d %I:%M %p')
+            except:
+                formatted_timestamp = datetime_value
+
             email_payload = {
                 "to": to_field,
                 "from": from_field,
