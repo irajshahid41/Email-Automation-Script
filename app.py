@@ -313,11 +313,11 @@ if "Compose" in menu:
     col3, col4 = st.columns(2)
     with col3:
       datetime_value = st.datetime_input(
-          "SCHEDULE DATE & TIME",
-           value=datetime.now(),
-           label_visibility="collapsed",
-           key="compose_date_time"
-       )
+         "SCHEDULE DATE & TIME",
+          value=datetime.now(),
+          label_visibility="visible",
+          key="compose_date_time"
+      )
 
 
     with col4:
