@@ -62,19 +62,37 @@ st.markdown("""
         margin-bottom: 8px !important;
     }
 
-    /* CYBERPUNK FORM COMPONENT DECORATION */
-    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+    /* CYBERPUNK FORM COMPONENT DECORATION - MATRICED TO FORCED HEIGHTS */
+    .stTextInput input, .stTextArea textarea, div[data-testid="stSelectbox"] > div {
         background-color: #1E2235 !important;
         border: 1px solid #2D3450 !important;
         border-radius: 8px !important;
         color: #FFFFFF !important;
         font-size: 14px !important;
-        padding: 10px !important;
         transition: all 0.2s ease-in-out;
     }
+
+    /* Force specific pixel matching for text boxes */
+    .stTextInput input {
+        height: 43px !important;
+        padding: 10px !important;
+    }
+
+    /* Force identical pixel box matching onto select box containers */
+    div[data-testid="stSelectbox"] [data-baseweb="select"] {
+        height: 43px !important;
+        background-color: transparent !important;
+        border: none !important;
+    }
     
-    /* Neon focus highlight ring */
-    .stTextInput input:focus, .stTextArea textarea:focus {
+    div[data-baseweb="select"] > div:first-child {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        padding-left: 4px !important;
+    }
+    
+    /* Neon focus highlight ring across both elements */
+    .stTextInput input:focus, div[data-testid="stSelectbox"] > div:focus-within {
         border-color: #00F2FE !important;
         box-shadow: 0 0 8px rgba(0, 242, 254, 0.4) !important;
     }
@@ -85,15 +103,10 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    /* SELECTBOX INTERNAL TEXT COLOR PATCH */
-    div[data-baseweb="select"] data-styled-text {
-        color: #FFFFFF !important;
-    }
-
     /* HIGH-VOLTAGE HYPER CYAN CTA ACTION BUTTON */
     div.stButton > button:first-child {
         background-color: #00F2FE !important;
-        color: #0F172A !important; /* Dark text for crisp contrast on neon */
+        color: #0F172A !important;
         border-radius: 8px !important;
         border: none !important;
         font-weight: 800 !important;
