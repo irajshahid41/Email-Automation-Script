@@ -91,6 +91,9 @@ st.markdown("""
     .stTextInput input {
         height: 42px !important;
         padding: 8px 12px !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+       -webkit-text-fill-color: #000000 !important;
     }
 
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) {
@@ -138,6 +141,9 @@ div[data-testid="stDateInput"] svg {
     
     .stTextArea textarea {
         padding: 10px 12px !important;
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+        -webkit-text-fill-color: #000000 !important
     }
 
     /* Selectbox Custom Adjustments */
