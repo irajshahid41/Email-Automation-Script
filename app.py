@@ -268,25 +268,6 @@ div[data-testid="stDateInput"] svg {
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-    <style>
-    /* Style for both the Date Input and the Selectbox to ensure they match perfectly */
-    div[data-testid="stDateInput"] > div[data-baseweb="input"],
-    div[data-testid="stSelectbox"] > div[data-baseweb="select"] {
-        background-color: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 6px !important;
-        height: 42px !important; /* Matches your defined height */
-    }
-
-    /* Ensure the text color is consistent */
-    div[data-testid="stDateInput"] input,
-    div[data-testid="stSelectbox"] div {
-        color: #0F172A !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 # 3. Sidebar Navigation Structure
 with st.sidebar:
     st.markdown('<div class="sidebar-logo">✉️ MAIL<span>FLOW</span></div>', unsafe_allow_html=True)
@@ -343,7 +324,7 @@ if "Compose" in menu:
           color: #0F172A !important;
           }
        </style>
-    """, unsafe_allow_html=True)
+      """, unsafe_allow_html=True)
     datetime_value = st.datetime_input(
         "Date Time", 
         value=datetime.now(), 
