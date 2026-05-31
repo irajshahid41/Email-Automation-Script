@@ -94,6 +94,7 @@ st.markdown("""
         color: #6B7280 !important;
         background-color: #FFFFFF !important;
        -webkit-text-fill-color: #6B7280 !important;
+       caret-color: #6B7280 !important;
     }
 
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) {
@@ -144,6 +145,7 @@ div[data-testid="stDateInput"] svg {
         color: #6B7280 !important;
         background-color: #FFFFFF !important;
         -webkit-text-fill-color: #6B7280 !important
+        caret-color: #6B7280 !important;
     }
 
     /* Selectbox Custom Adjustments */
