@@ -13,11 +13,13 @@ if "email_history" not in st.session_state:
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Premium Overhaul Stylesheet Injection (Nordic Tech & Slate Theme)
+# 2. Cyber Obsidian & Neon Overhaul Stylesheet Injection
 st.markdown("""
     <style>
-    html, body, [data-testid="stAppViewContainer"] {
-        background-color: #F9F9F7 !important;
+    /* GLOBAL DARK MODE SETUP */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+        background-color: #12141C !important;
+        color: #F7FAFC !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .block-container {
@@ -25,32 +27,34 @@ st.markdown("""
         max-width: 1400px;
     }
     
-    /* SIDEBAR MATTE OBSIDIAN COLOR */
+    /* SIDEBAR LAYER STRUCTURAL COLOR */
     [data-testid="stSidebar"] {
-        background-color: #1A2222 !important;
+        background-color: #1A1D29 !important;
+        border-right: 1px solid #24293E !important;
     }
     
     /* BRAND HEADINGS STYLE */
     .sidebar-logo {
         font-size: 24px;
         font-weight: 800;
-        color: #C05621;
+        color: #00F2FE;
         font-family: 'Courier New', Courier, monospace;
         letter-spacing: 3px;
         padding: 1rem 0;
+        text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
     }
     .main-title {
         font-family: 'Impact', sans-serif !important;
         font-weight: 900 !important;
-        color: #2D3748 !important;
+        color: #FFFFFF !important;
         font-size: 38px !important;
         margin-bottom: 5px !important;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
     
-    /* INPUT LABELS STYLE */
+    /* NEON INPUT LABELS STYLE */
     label {
-        color: #718096 !important;
+        color: #94A3B8 !important;
         font-weight: 700 !important;
         text-transform: uppercase;
         font-size: 11px !important;
@@ -58,87 +62,88 @@ st.markdown("""
         margin-bottom: 8px !important;
     }
 
-    /* PREMIUM FIELDS WITH SUBTLE SHADOWS */
+    /* CYBERPUNK FORM COMPONENT DECORATION */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
+        background-color: #1E2235 !important;
+        border: 1px solid #2D3450 !important;
         border-radius: 8px !important;
-        color: #1A202C !important;
+        color: #FFFFFF !important;
         font-size: 14px !important;
         padding: 10px !important;
         transition: all 0.2s ease-in-out;
     }
     
-    /* Crisp focus highlight */
+    /* Neon focus highlight ring */
     .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: #C05621 !important;
-        box-shadow: 0 0 0 1px #C05621 !important;
+        border-color: #00F2FE !important;
+        box-shadow: 0 0 8px rgba(0, 242, 254, 0.4) !important;
     }
     
-    /* Clear placeholder visibility */
+    /* Fixed visibility of text hints inside inputs */
     .stTextInput input::placeholder, .stTextArea textarea::placeholder {
-        color: #A0AEC0 !important;
+        color: #64748B !important;
         opacity: 1 !important;
     }
 
-    /* FORM ALIGNMENT CORRECTION */
-    div[data-testid="stFormSubmitButton"] {
-        text-align: right;
+    /* SELECTBOX INTERNAL TEXT COLOR PATCH */
+    div[data-baseweb="select"] data-styled-text {
+        color: #FFFFFF !important;
     }
-    
-    /* MATTE COPPER ORANGE BUTTON ACTION */
+
+    /* HIGH-VOLTAGE HYPER CYAN CTA ACTION BUTTON */
     div.stButton > button:first-child {
-        background-color: #C05621 !important;
-        color: white !important;
+        background-color: #00F2FE !important;
+        color: #0F172A !important; /* Dark text for crisp contrast on neon */
         border-radius: 8px !important;
         border: none !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
         letter-spacing: 0.5px;
         padding: 0.6rem 2.2rem !important;
-        box-shadow: 0 2px 4px rgba(192, 86, 33, 0.15);
+        box-shadow: 0 4px 14px rgba(0, 242, 254, 0.3);
         transition: all 0.2s ease;
     }
     div.stButton > button:first-child:hover {
-        background-color: #9C4216 !important;
-        box-shadow: 0 4px 8px rgba(192, 86, 33, 0.25);
+        background-color: #00B4D8 !important;
+        box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        transform: translateY(-1px);
     }
     
-    /* Secondary Clear Button */
+    /* Dark Balanced Clear Button */
     div.stButton > button[key*="clear_btn"] {
-        background-color: #FFFFFF !important;
-        color: #4A5568 !important;
-        border: 1px solid #E2E8F0 !important;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        background-color: #1E2235 !important;
+        color: #94A3B8 !important;
+        border: 1px solid #2D3450 !important;
+        box-shadow: none !important;
     }
     div.stButton > button[key*="clear_btn"]:hover {
-        background-color: #F7FAFC !important;
-        color: #1A202C !important;
+        background-color: #2D3450 !important;
+        color: #FFFFFF !important;
     }
     
-    /* COMPACT CONFIGURATION FOOTER CARD */
+    /* CYBER INFRASTRUCTURE CONFIG BADGE */
     .status-badge {
-        background-color: #232E2E;
-        color: #48BB78;
+        background-color: #111827;
+        color: #34D399;
         padding: 14px;
         border-radius: 8px;
         font-size: 12px;
         font-family: monospace;
-        border: 1px solid #2B3A3A;
+        border: 1px solid #1F2937;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Panel Context
+# 3. Sidebar Panel Navigation Matrix
 with st.sidebar:
     st.markdown('<div class="sidebar-logo">✉️ MAILFLOW</div>', unsafe_allow_html=True)
     menu = st.radio("Nav", ["📝 Compose", "📅 Scheduled", "⏳ History"], label_visibility="collapsed")
     st.markdown("<br>" * 14, unsafe_allow_html=True)
-    st.markdown('<div class="status-badge"><span style="color:#48BB78;">●</span> Gmail ready<br><b style="color:white;">Configured</b></div>', unsafe_allow_html=True)
+    st.markdown('<div class="status-badge"><span style="color:#34D399;">●</span> System Online<br><b style="color:white;">Gmail Configured</b></div>', unsafe_allow_html=True)
 
 # --- PANEL BLOCK: COMPOSE LOOP ---
 if "Compose" in menu:
     st.markdown('<div class="main-title">NEW EMAIL</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color: #718096; font-size: 14px; margin-bottom: 20px;">Compose and schedule your email distribution loop</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #94A3B8; font-size: 14px; margin-bottom: 20px;">Compose and schedule your email distribution loop</div>', unsafe_allow_html=True)
     st.write("---")
     
     col1, col2 = st.columns(2)
@@ -150,7 +155,6 @@ if "Compose" in menu:
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line")
     body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=200)
     
-    # Precise Alignment row for Scheduling Elements
     col3, col4 = st.columns(2)
     with col3:
         time_input_string = st.text_input("SCHEDULE DATE & TIME", value="2026-05-31 12:01 PM")
@@ -168,7 +172,7 @@ if "Compose" in menu:
     with ctrl_col3:
         send_clicked = st.button("Send Email", key="send_btn", use_container_width=True)
 
-    # 2. Dedicated Status Row (Appears perfectly below the buttons)
+    # 2. High-Contrast Status Display Blocks
     if send_clicked:
         if to_field and subject_field and body_field:
             email_payload = {
@@ -182,68 +186,64 @@ if "Compose" in menu:
             if send_mode == "Schedule for later":
                 st.session_state.scheduled_emails.append(email_payload)
                 st.markdown("""
-                    <div style="background-color: #EBF8FF; border-left: 5px solid #3182CE; padding: 15px; border-radius: 6px; margin-top: 20px;">
-                        <b style="color: #2B6CB0; font-size: 15px;">📅 Scheduled Successfully</b><br>
-                        <span style="color: #4A5568; font-size: 13px;">Outbound email successfully saved to your scheduled queue!</span>
+                    <div style="background-color: #1E293B; border-left: 5px solid #38BDF8; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                        <b style="color: #38BDF8; font-size: 15px;">📅 Scheduled Successfully</b><br>
+                        <span style="color: #94A3B8; font-size: 13px;">Outbound email successfully saved to your scheduled queue!</span>
                     </div>
                 """, unsafe_allow_html=True)
             else:
-                # Placeholder for the active state
                 status_box = st.empty()
                 status_box.markdown("""
-                    <div style="background-color: #FFFDF5; border-left: 5px solid #D69E2E; padding: 15px; border-radius: 6px; margin-top: 20px;">
-                        <b style="color: #975A16; font-size: 15px;">⏳ Sending email...</b><br>
-                        <span style="color: #718096; font-size: 13px;">Accessing Google API cloud relays. Please wait...</span>
+                    <div style="background-color: #2D2514; border-left: 5px solid #F59E0B; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                        <b style="color: #F59E0B; font-size: 15px;">⏳ Sending email...</b><br>
+                        <span style="color: #A1A1AA; font-size: 13px;">Accessing Google API cloud relays. Please wait...</span>
                     </div>
                 """, unsafe_allow_html=True)
                 
                 try:
                     # Deliver via our authenticated Gmail API script connection
                     send_email(to_field, subject_field, body_field)
-                    
-                    # Log record to Session State history
                     st.session_state.email_history.append(email_payload)
                     
-                    # Overwrite placeholder with a highly visible custom Success Highlight Row
                     status_box.markdown("""
-                        <div style="background-color: #F0FFF4; border-left: 5px solid #38A169; padding: 15px; border-radius: 6px; margin-top: 20px;">
-                            <b style="color: #276749; font-size: 15px;">✅ Email sent successfully!</b><br>
-                            <span style="color: #2F855A; font-size: 13px;">Dispatch confirmed. Message has left your Gmail account successfully.</span>
+                        <div style="background-color: #064E3B; border-left: 5px solid #10B981; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                            <b style="color: #34D399; font-size: 15px;">✅ Email sent successfully!</b><br>
+                            <span style="color: #A7F3D0; font-size: 13px;">Dispatch confirmed. Message has left your Gmail account safely.</span>
                         </div>
                     """, unsafe_allow_html=True)
                     st.toast("Email Dispatched!", icon="🚀")
                     
                 except Exception as e:
                     status_box.markdown(f"""
-                        <div style="background-color: #FFF5F5; border-left: 5px solid #E53E3E; padding: 15px; border-radius: 6px; margin-top: 20px;">
-                            <b style="color: #9B2C2C; font-size: 15px;">❌ Delivery Failed</b><br>
-                            <span style="color: #C53030; font-size: 13px;">Handshake Refused: {str(e)}</span>
+                        <div style="background-color: #4C1D1D; border-left: 5px solid #EF4444; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                            <b style="color: #F87171; font-size: 15px;">❌ Delivery Failed</b><br>
+                            <span style="color: #FCA5A5; font-size: 13px;">Handshake Refused: {str(e)}</span>
                         </div>
                     """, unsafe_allow_html=True)
         else:
             st.markdown("""
-                <div style="background-color: #FFF5F5; border-left: 5px solid #E53E3E; padding: 15px; border-radius: 6px; margin-top: 20px;">
-                    <b style="color: #9B2C2C; font-size: 15px;">⚠️ Validation Error</b><br>
-                    <span style="color: #C53030; font-size: 13px;">Please make sure the TO, SUBJECT, and MESSAGE blocks are filled out.</span>
+                <div style="background-color: #4C1D1D; border-left: 5px solid #EF4444; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                    <b style="color: #F87171; font-size: 15px;">⚠️ Validation Error</b><br>
+                    <span style="color: #FCA5A5; font-size: 13px;">Please make sure the TO, SUBJECT, and MESSAGE blocks are filled out.</span>
                 </div>
             """, unsafe_allow_html=True)
 
 # --- PANEL BLOCK: SCHEDULED ---
 elif "Scheduled" in menu:
     st.markdown('<div class="main-title">SCHEDULED EMAILS</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color: #718096; font-size: 14px; margin-bottom: 20px;">Emails currently queued up for future automated delivery</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #94A3B8; font-size: 14px; margin-bottom: 20px;">Emails currently queued up for future automated delivery</div>', unsafe_allow_html=True)
     st.write("---")
     if not st.session_state.scheduled_emails:
-        st.markdown('<div style="text-align: center; padding: 5rem 2rem; color: #A0AEC0; font-family: monospace; font-size: 16px;">📅 No scheduled emails in your dispatch queue.</div>', unsafe_allow_html=True)
+        st.markdown('<div style="text-align: center; padding: 5rem 2rem; color: #64748B; font-family: monospace; font-size: 16px;">📅 No scheduled emails in your dispatch queue.</div>', unsafe_allow_html=True)
     else:
         st.write(st.session_state.scheduled_emails)
 
 # --- PANEL BLOCK: HISTORY ---
 elif "History" in menu:
     st.markdown('<div class="main-title">TRANSMISSION HISTORY</div>', unsafe_allow_html=True)
-    st.markdown('<div style="color: #718096; font-size: 14px; margin-bottom: 20px;">Log of all successfully dispatched automated emails</div>', unsafe_allow_html=True)
+    st.markdown('<div style="color: #94A3B8; font-size: 14px; margin-bottom: 20px;">Log of all successfully dispatched automated emails</div>', unsafe_allow_html=True)
     st.write("---")
     if not st.session_state.email_history:
-        st.markdown('<div style="text-align: center; padding: 5rem 2rem; color: #A0AEC0; font-family: monospace; font-size: 16px;">⏳ No tracked sent logs available yet.</div>', unsafe_allow_html=True)
+        st.markdown('<div style="text-align: center; padding: 5rem 2rem; color: #64748B; font-family: monospace; font-size: 16px;">⏳ No tracked sent logs available yet.</div>', unsafe_allow_html=True)
     else:
         st.write(st.session_state.email_history)
