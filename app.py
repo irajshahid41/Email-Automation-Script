@@ -110,23 +110,6 @@ st.markdown("""
         color: #0F172A;
     }
 
-
-/* Force datetime_input container to be white and match input borders */
-div[data-testid="stDateInput"] > div[data-baseweb="input"] {
-    background-color: #FFFFFF !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 6px !important;
-}
-
-/* Ensure the text color inside matches your theme */
-div[data-testid="stDateInput"] input {
-    color: #0F172A !important;
-}
-
-/* Match the calendar icon color to your accent */
-div[data-testid="stDateInput"] svg {
-    fill: #E05621 !important;
-}
 /* Ensure the calendar icon color matches your theme */
 div[data-testid="stDateInput"] svg {
     color: #E05621 !important;
@@ -265,6 +248,17 @@ div[data-testid="stDateInput"] svg {
     hr {
         margin: 1.25rem 0 !important;
     }
+
+    div[data-testid="stDateInput"] > div[data-baseweb="input"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+        height: 42px !important;
+    }
+    div[data-testid="stDateInput"] input {
+        color: #0F172A !important;
+    }
+    
     </style>
 """, unsafe_allow_html=True)
 
