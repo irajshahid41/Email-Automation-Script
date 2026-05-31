@@ -307,7 +307,7 @@ if "Compose" in menu:
             
         with icon_col:
             # Use top padding to vertically center the icon with the input box
-            st.markdown("<div style='padding-top: 30px;'>📅</div>", unsafe_allow_html=True)
+            st.markdown("<div style='padding-top: 40px;'>📅</div>", unsafe_allow_html=True)
             
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
