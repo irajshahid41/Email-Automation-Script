@@ -249,6 +249,10 @@ div[data-testid="stDateInput"] svg {
         margin: 1.25rem 0 !important;
     }
 
+    div[data-testid="stDateInput"] div[data-baseweb="base-input"] {
+           background-color: #FFFFFF !important;
+    }
+
     div[data-testid="stDateInput"] > div[data-baseweb="input"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
