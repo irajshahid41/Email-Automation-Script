@@ -144,7 +144,7 @@ div[data-testid="stDateInput"] svg {
         padding: 10px 12px !important;
         color: #6B7280 !important;
         background-color: #FFFFFF !important;
-        -webkit-text-fill-color: #6B7280 !important
+        -webkit-text-fill-color: #6B7280 !important;
         caret-color: #6B7280 !important;
     }
 
