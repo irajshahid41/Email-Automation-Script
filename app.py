@@ -78,8 +78,7 @@ st.markdown("""
     /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
     .stTextInput input, .stTextArea textarea, 
     div[data-testid="stSelectbox"] > div,
-    div[data-baseweb="select"],
-    input[type="datetime-local"] {
+    div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
@@ -89,16 +88,30 @@ st.markdown("""
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     }
 
-    .stTextInput input, input[type="datetime-local"] {
+    .stTextInput input {
         height: 42px !important;
         padding: 8px 12px !important;
     }
     
-    input[type="datetime-local"] {
-        width: 100%;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        box-sizing: border-box;
-        outline: none;
+    /* TARGET SPECIFIC CALENDAR PICKER FIELD FOR INLINE ICON POSITIONING */
+    div[data-testid="element-container"]:has(input[id="compose_date_field"]) .stTextInput > div {
+        position: relative;
+    }
+    
+    div[data-testid="element-container"]:has(input[id="compose_date_field"]) .stTextInput input {
+        padding-right: 40px !important;
+    }
+    
+    /* Injecting pristine right-aligned calendar symbol element inline */
+    div[data-testid="element-container"]:has(input[id="compose_date_field"]) .stTextInput > div::after {
+        content: '📅';
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        pointer-events: none;
+        opacity: 0.8;
     }
     
     .stTextArea textarea {
@@ -126,8 +139,7 @@ st.markdown("""
     
     /* Active Focus Styles */
     .stTextInput input:focus, .stTextArea textarea:focus, 
-    div[data-testid="stSelectbox"] > div:focus-within,
-    input[type="datetime-local"]:focus {
+    div[data-testid="stSelectbox"] > div:focus-within {
         border-color: #1A56DB !important;
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
         outline: none !important;
@@ -252,14 +264,15 @@ if "Compose" in menu:
     subject_field = st.text_input("SUBJECT", placeholder="Email subject line", key="compose_subject_field")
     body_field = st.text_area("MESSAGE", placeholder="Write your message here...", height=150, key="compose_body_field")
 
-    # --- PERFECTLY ALIGNED POSITIONING ROW FOR DATE-TIME PICKER ---
+    # --- PIXEL PERFECT ALIGNED WIDGET POSITIONING ROW ---
     col3, col4 = st.columns(2)
     with col3:
-        st.markdown('<label class="custom-input-label">SCHEDULE DATE & TIME</label>', unsafe_allow_html=True)
-        st.markdown('<input type="datetime-local" id="schedule_picker" value="2026-05-31T12:01">', unsafe_allow_html=True)
-        
-        # Execution tracking value passed into your processing pipeline below
-        datetime_value = "2026-05-31 12:01 PM"
+        # Native widget engine provides native sizing context, while CSS pseudo-elements handle the icon layout beautifully
+        datetime_value = st.text_input(
+            "SCHEDULE DATE & TIME", 
+            value="2026-05-31 12:01 PM", 
+            id="compose_date_field"
+        )
         
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"], key="compose_send_mode")
