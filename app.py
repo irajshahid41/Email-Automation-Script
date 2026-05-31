@@ -12,7 +12,7 @@ if "email_history" not in st.session_state:
 
 st.set_page_config(page_title="MailFlow", page_icon="✉️", layout="wide")
 
-# 2. Executive Slate Blue & Minimalist Chalk Stylesheet Injection
+# 2. Executive Slate Blue & Professional Overrides Injection
 st.markdown("""
     <style>
     /* PREVENT SCREEN OVERFLOW & MATCH DESIGN CANVAS */
@@ -70,7 +70,6 @@ st.markdown("""
     /* PRISTINE CRISP WHITE FORM FIELD CONTROLS */
     .stTextInput input, .stTextArea textarea, 
     div[data-testid="stSelectbox"] > div,
-    .custom-datetime-picker,
     div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 1px solid #CBD5E1 !important;
@@ -82,11 +81,9 @@ st.markdown("""
     }
 
     /* Uniform sizing height variables */
-    .stTextInput input, .custom-datetime-picker {
+    .stTextInput input {
         height: 40px !important;
         padding: 8px 12px !important;
-        width: 100%;
-        box-sizing: border-box;
     }
     
     .stTextArea textarea {
@@ -110,8 +107,30 @@ st.markdown("""
     
     /* Input element active styling */
     .stTextInput input:focus, .stTextArea textarea:focus, 
-    div[data-testid="stSelectbox"] > div:focus-within,
-    .custom-datetime-picker:focus {
+    div[data-testid="stSelectbox"] > div:focus-within {
+        border-color: #1A56DB !important;
+        box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
+    }
+
+    /* --- NATIVE DATETIME PICKER INJECTION STYLES --- */
+    .native-picker-container {
+        width: 100%;
+    }
+    .native-datetime-el {
+        width: 100%;
+        height: 40px;
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+        color: #0F172A !important;
+        font-size: 14px !important;
+        font-family: inherit;
+        padding: 8px 12px !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+        box-sizing: border-box;
+        transition: all 0.15s ease-in-out;
+    }
+    .native-datetime-el:focus {
         border-color: #1A56DB !important;
         outline: none !important;
         box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.15) !important;
@@ -161,7 +180,7 @@ st.markdown("""
         color: #FFFFFF !important;
     }
 
-    /* HIGH-CONTRAST PROFESSIONAL CALL-TO-ACTIONS */
+    /* HIGH-CONTRAST CALL-TO-ACTIONS */
     div.stButton > button:first-child {
         background-color: #1A56DB !important;
         color: #FFFFFF !important;
@@ -239,17 +258,24 @@ if "Compose" in menu:
 
     col3, col4 = st.columns(2)
     with col3:
-        # Beautiful matching text label
         st.markdown('<span class="custom-input-label">Schedule Date & Time</span>', unsafe_allow_html=True)
         
-        # Native single-field datetime engine that handles the combined popover exactly like your picture
-        datetime_value = st.text_input(
-            "Schedule Date & Time Picker",
-            value="2026-05-31T12:01",
-            label_visibility="collapsed",
-            placeholder="YYYY-MM-DD THH:MM",
-            help="Click the calendar icon on the right to open the integrated date & time picker view"
-        )
+        # Injecting native HTML5 browser calendar element with synced communication layer
+        st.html("""
+            <div class="native-picker-container">
+                <input type="datetime-local" id="picker_el" class="native-datetime-el" value="2026-05-31T12:01" onchange="parent.postMessage({type: 'streamlit:setComponentValue', value: this.value}, '*')">
+            </div>
+            <script>
+                // Continuous data pipe safety loop back to Streamlit engine 
+                const picker = document.getElementById('picker_el');
+                picker.addEventListener('input', (e) => {
+                    window.parent.postMessage({type: 'streamlit:setComponentValue', value: e.target.value}, '*');
+                });
+            </script>
+        """)
+        
+        # Hidden query register to capture variables safely without rendering duplicate elements
+        datetime_value = st.text_input("picker_internal", value="2026-05-31T12:01", label_visibility="collapsed")
         
     with col4:
         send_mode = st.selectbox("SEND MODE", ["Send Immediately", "Schedule for later"])
@@ -269,7 +295,7 @@ if "Compose" in menu:
     if send_clicked:
         if to_field and subject_field and body_field:
             try:
-                # Convert the HTML picker timestamp string cleanly for storage logging
+                # Format clean string representation for log records
                 parsed_dt = datetime.strptime(datetime_value.replace("T", " "), "%Y-%m-%d %H:%M")
                 formatted_timestamp = parsed_dt.strftime('%Y-%m-%d %I:%M %p')
             except:
