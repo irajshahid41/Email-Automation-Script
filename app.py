@@ -91,9 +91,9 @@ st.markdown("""
     .stTextInput input {
         height: 42px !important;
         padding: 8px 12px !important;
-        color: #000000 !important;
+        color: #6B7280 !important;
         background-color: #FFFFFF !important;
-       -webkit-text-fill-color: #000000 !important;
+       -webkit-text-fill-color: #6B7280 !important;
     }
 
     div[data-testid="element-container"]:has(input[key="compose_date_field"]) {
