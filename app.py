@@ -342,8 +342,8 @@ if "Compose" in menu:
           div[data-testid="stSelectbox"] div {
           color: #0F172A !important;
           }
-    </style>
-""", unsafe_allow_html=True)
+       </style>
+    """, unsafe_allow_html=True)
     datetime_value = st.datetime_input(
         "Date Time", 
         value=datetime.now(), 
@@ -351,7 +351,7 @@ if "Compose" in menu:
         key="compose_date_time"
     )
 
-with col4:
+  with col4:
     st.markdown('<label class="custom-input-label">SEND MODE</label>', unsafe_allow_html=True)
     send_mode = st.selectbox(
         "Mode", 
